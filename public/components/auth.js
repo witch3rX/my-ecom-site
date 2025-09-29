@@ -1,19 +1,39 @@
-// Simple Authentication System
+// Enhanced Authentication System
 export class AuthSystem {
     static signUp(userData) {
         try {
             const users = JSON.parse(localStorage.getItem('users')) || [];
             
+            // Validate required fields
+            if (!userData.firstName || !userData.lastName || !userData.email || !userData.password || !userData.phone) {
+                throw new Error('All fields are required');
+            }
+
             // Check if user already exists
-            const existingUser = users.find(user => user.email === userData.email);
+            const existingUser = users.find(user => user.email.toLowerCase() === userData.email.toLowerCase());
             if (existingUser) {
                 throw new Error('User already exists with this email');
             }
 
+            // Validate email format
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(userData.email)) {
+                throw new Error('Please enter a valid email address');
+            }
+
+            // Validate password length
+            if (userData.password.length < 6) {
+                throw new Error('Password must be at least 6 characters long');
+            }
+
             // Create new user
             const newUser = {
-                id: Date.now(),
-                ...userData,
+                id: Date.now().toString(),
+                firstName: userData.firstName.trim(),
+                lastName: userData.lastName.trim(),
+                email: userData.email.toLowerCase().trim(),
+                password: userData.password, // In real app, this should be hashed
+                phone: userData.phone.trim(),
                 createdAt: new Date().toISOString()
             };
 
@@ -21,7 +41,7 @@ export class AuthSystem {
             localStorage.setItem('users', JSON.stringify(users));
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             
-            console.log('User signed up:', newUser);
+            console.log('User signed up successfully:', newUser.email);
             return newUser;
         } catch (error) {
             console.error('Sign up error:', error);
@@ -32,15 +52,24 @@ export class AuthSystem {
     static signIn(email, password) {
         try {
             const users = JSON.parse(localStorage.getItem('users')) || [];
-            const user = users.find(u => u.email === email && u.password === password);
+            const user = users.find(u => 
+                u.email.toLowerCase() === email.toLowerCase() && 
+                u.password === password
+            );
             
             if (!user) {
                 throw new Error('Invalid email or password');
             }
 
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            console.log('User signed in:', user);
-            return user;
+            // Update user data in case of changes
+            const updatedUser = {
+                ...user,
+                lastLogin: new Date().toISOString()
+            };
+            
+            localStorage.setItem('currentUser', JSON.stringify(updatedUser));
+            console.log('User signed in successfully:', user.email);
+            return updatedUser;
         } catch (error) {
             console.error('Sign in error:', error);
             throw error;
@@ -48,8 +77,11 @@ export class AuthSystem {
     }
 
     static signOut() {
+        const currentUser = this.getCurrentUser();
+        if (currentUser) {
+            console.log('User signed out:', currentUser.email);
+        }
         localStorage.removeItem('currentUser');
-        console.log('User signed out');
     }
 
     static getCurrentUser() {
@@ -63,5 +95,32 @@ export class AuthSystem {
 
     static isAuthenticated() {
         return !!this.getCurrentUser();
+    }
+
+    // Additional method to update user profile
+    static updateProfile(updatedData) {
+        try {
+            const currentUser = this.getCurrentUser();
+            if (!currentUser) {
+                throw new Error('No user logged in');
+            }
+
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const userIndex = users.findIndex(u => u.id === currentUser.id);
+            
+            if (userIndex === -1) {
+                throw new Error('User not found');
+            }
+
+            // Update user data
+            users[userIndex] = { ...users[userIndex], ...updatedData };
+            localStorage.setItem('users', JSON.stringify(users));
+            localStorage.setItem('currentUser', JSON.stringify(users[userIndex]));
+
+            return users[userIndex];
+        } catch (error) {
+            console.error('Update profile error:', error);
+            throw error;
+        }
     }
 }
