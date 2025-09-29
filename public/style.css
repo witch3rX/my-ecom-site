@@ -642,7 +642,55 @@ footer a:hover {
 .border-primary {
     border-color: var(--primary-color) !important;
 }
+/* User Dropdown Styles */
+.navbar-nav .dropdown-menu {
+    border: none;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    border-radius: 10px;
+    padding: 0.5rem 0;
+    margin-top: 10px;
+}
 
+.navbar-nav .dropdown-item {
+    padding: 0.75rem 1.5rem;
+    transition: all 0.3s ease;
+}
+
+.navbar-nav .dropdown-item:hover {
+    background-color: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.navbar-nav .dropdown-header {
+    padding: 0.5rem 1.5rem;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.navbar-nav .dropdown-divider {
+    margin: 0.5rem 0;
+}
+
+/* Admin badge in dropdown */
+.admin-badge {
+    background: linear-gradient(45deg, #ffd700, #ffed4e);
+    color: #000;
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: bold;
+    margin-left: 5px;
+}
+
+/* Caret for dropdown */
+.navbar-nav .fa-caret-down {
+    font-size: 0.8rem;
+    transition: transform 0.3s ease;
+}
+
+.navbar-nav .dropdown.show .fa-caret-down {
+    transform: rotate(180deg);
+}
 /* Mobile First Approach */
 @media (max-width: 768px) {
     .navbar-brand {
