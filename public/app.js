@@ -31,6 +31,24 @@ export function showToast(message, type = 'success') {
     }
 }
 
+// In the showCheckoutModal function, add this check:
+function showCheckoutModal(totalAmount) {
+    // Check if user is authenticated
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    
+    if (!currentUser) {
+        // Redirect to auth page if not logged in
+        if (confirm('You need to sign in to complete your order. Would you like to sign in now?')) {
+            window.location.href = 'auth.html';
+        }
+        return;
+    }
+    
+    // Rest of the checkout modal code...
+    console.log('Proceeding with checkout for user:', currentUser.firstName, 'Amount:', totalAmount);
+    // Add your existing checkout modal logic here
+}
+
 // Function to update active category filter
 function updateActiveCategory(category) {
     // Remove active class from all filters
@@ -59,106 +77,50 @@ function router() {
     renderProductsPage(appContainer, category);
 }
 
-// Check if user is admin
-function isAdminUser(user) {
-    const adminEmails = ['admin@ir7.com'];
-    return user && adminEmails.includes(user.email.toLowerCase());
-}
-
-// Update user display in header with admin link
+// Update user display in header
 function updateUserDisplay() {
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
     const authLink = document.querySelector('a[href="auth.html"]');
     
     if (currentUser && authLink) {
-        // Update auth link to show user name with dropdown
-        authLink.innerHTML = `
-            <i class="fas fa-user me-1"></i>${currentUser.firstName}
-            <i class="fas fa-caret-down ms-1"></i>
-        `;
-        authLink.setAttribute('data-bs-toggle', 'dropdown');
-        authLink.setAttribute('aria-expanded', 'false');
+        // Update auth link to show user name
+        authLink.innerHTML = `<i class="fas fa-user me-1"></i>${currentUser.firstName}`;
         
-        // Create dropdown menu if it doesn't exist
-        if (!document.getElementById('user-dropdown')) {
-            const dropdownMenu = document.createElement('div');
-            dropdownMenu.className = 'dropdown-menu dropdown-menu-end';
-            dropdownMenu.id = 'user-dropdown';
-            
-            let dropdownContent = `
-                <div class="dropdown-header">
-                    <strong>${currentUser.firstName} ${currentUser.lastName}</strong>
-                    <br>
-                    <small class="text-muted">${currentUser.email}</small>
-                </div>
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item" href="#" id="profile-link">
-                    <i class="fas fa-user-circle me-2"></i>My Profile
-                </a>
-                <a class="dropdown-item" href="#" id="orders-link">
-                    <i class="fas fa-shopping-bag me-2"></i>My Orders
+        // Check if logout link already exists
+        if (!document.getElementById('logout-link')) {
+            // Add logout option
+            const logoutItem = document.createElement('li');
+            logoutItem.className = 'nav-item';
+            logoutItem.innerHTML = `
+                <a class="nav-link" href="#" id="logout-link">
+                    <i class="fas fa-sign-out-alt me-1"></i>Logout
                 </a>
             `;
             
-            // Add admin link if user is admin
-            if (isAdminUser(currentUser)) {
-                dropdownContent += `
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-warning" href="admin.html" id="admin-link">
-                        <i class="fas fa-crown me-2"></i>Admin Panel
-                    </a>
-                `;
-            }
-            
-            dropdownContent += `
-                <div class="dropdown-divider"></div>
-                <a class="dropdown-item text-danger" href="#" id="logout-link">
-                    <i class="fas fa-sign-out-alt me-2"></i>Logout
-                </a>
-            `;
-            
-            dropdownMenu.innerHTML = dropdownContent;
-            
-            // Add dropdown menu to navbar nav
+            // Add logout link to navbar
             const navbarNav = document.querySelector('.navbar-nav');
-            const authListItem = authLink.parentElement;
-            authListItem.classList.add('dropdown');
-            authListItem.appendChild(dropdownMenu);
-            
-            // Add logout event listener
-            document.getElementById('logout-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                localStorage.removeItem('currentUser');
-                showToast('Logged out successfully', 'success');
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000);
-            });
-            
-            // Add profile and orders event listeners
-            document.getElementById('profile-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showToast('Profile page coming soon!', 'info');
-            });
-            
-            document.getElementById('orders-link').addEventListener('click', (e) => {
-                e.preventDefault();
-                showToast('Orders page coming soon!', 'info');
-            });
+            if (navbarNav) {
+                navbarNav.appendChild(logoutItem);
+                
+                // Add logout event listener
+                document.getElementById('logout-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    localStorage.removeItem('currentUser');
+                    showToast('Logged out successfully', 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1000);
+                });
+            }
         }
-        
     } else if (authLink) {
-        // Reset to default sign in text and remove dropdown
+        // Reset to default sign in text
         authLink.innerHTML = '<i class="fas fa-user me-1"></i>Sign In';
-        authLink.removeAttribute('data-bs-toggle');
-        authLink.removeAttribute('aria-expanded');
         
-        const authListItem = authLink.parentElement;
-        authListItem.classList.remove('dropdown');
-        
-        const dropdownMenu = document.getElementById('user-dropdown');
-        if (dropdownMenu) {
-            dropdownMenu.remove();
+        // Remove logout link if exists
+        const logoutLink = document.getElementById('logout-link');
+        if (logoutLink) {
+            logoutLink.parentElement.remove();
         }
     }
 }
@@ -228,5 +190,12 @@ if (document.readyState === 'loading') {
 // Hashchange should still work independently
 window.addEventListener('hashchange', router);
 
+// Add admin access shortcut (Ctrl+Alt+A)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.altKey && e.key === 'a') {
+        window.location.href = 'admin.html';
+    }
+});
+
 // Export for other modules
-export { router, showToast };
+export { router, showCheckoutModal };
