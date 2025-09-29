@@ -26,19 +26,14 @@ export class AuthSystem {
                 throw new Error('Password must be at least 6 characters long');
             }
 
-            // Check if user is admin
-            const adminEmails = ['admin@ir7.com'];
-            const isAdmin = adminEmails.includes(userData.email.toLowerCase());
-
             // Create new user
             const newUser = {
                 id: Date.now().toString(),
                 firstName: userData.firstName.trim(),
                 lastName: userData.lastName.trim(),
                 email: userData.email.toLowerCase().trim(),
-                password: userData.password,
+                password: userData.password, // In real app, this should be hashed
                 phone: userData.phone.trim(),
-                isAdmin: isAdmin,
                 createdAt: new Date().toISOString()
             };
 
@@ -46,7 +41,7 @@ export class AuthSystem {
             localStorage.setItem('users', JSON.stringify(users));
             localStorage.setItem('currentUser', JSON.stringify(newUser));
             
-            console.log('User signed up successfully:', newUser.email, 'Admin:', isAdmin);
+            console.log('User signed up successfully:', newUser.email);
             return newUser;
         } catch (error) {
             console.error('Sign up error:', error);
@@ -66,19 +61,14 @@ export class AuthSystem {
                 throw new Error('Invalid email or password');
             }
 
-            // Check if user is admin
-            const adminEmails = ['admin@ir7.com'];
-            const isAdmin = adminEmails.includes(user.email.toLowerCase());
-
             // Update user data in case of changes
             const updatedUser = {
                 ...user,
-                isAdmin: isAdmin,
                 lastLogin: new Date().toISOString()
             };
             
             localStorage.setItem('currentUser', JSON.stringify(updatedUser));
-            console.log('User signed in successfully:', user.email, 'Admin:', isAdmin);
+            console.log('User signed in successfully:', user.email);
             return updatedUser;
         } catch (error) {
             console.error('Sign in error:', error);
@@ -105,12 +95,6 @@ export class AuthSystem {
 
     static isAuthenticated() {
         return !!this.getCurrentUser();
-    }
-
-    // Check if current user is admin
-    static isAdmin() {
-        const currentUser = this.getCurrentUser();
-        return currentUser ? currentUser.isAdmin : false;
     }
 
     // Additional method to update user profile
