@@ -52,7 +52,7 @@ const products = [
         price: 1299, 
         category: 'jerseys', 
         details: 'Customizable with name and number. Climacool ventilation.',
-        image: 'https://images.unsplash.com/photo-1614624532983-1fe212cff6f5?w=400&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         hasSizes: true
     },
@@ -122,7 +122,7 @@ const products = [
         price: 1999, 
         category: 'balls', 
         details: 'Butylene bladder for best air retention. All-weather use. Size 5.',
-        image: 'https://images.unsplash.com/photo-1614632231383-9a8a71914364?w=400&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
         sizes: ['Standard Size 5'],
         hasSizes: false
     },
@@ -168,7 +168,7 @@ const products = [
         price: 1499, 
         category: 'accessories', 
         details: 'Negative cut. Finger protection spines. All-weather grip.',
-        image: 'https://images.unsplash.com/photo-1599058917765-660d3e5cfb6a?w=400&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
         sizes: ['S', 'M', 'L', 'XL'],
         hasSizes: true
     },
@@ -179,7 +179,7 @@ const products = [
         price: 499, 
         category: 'accessories', 
         details: 'Moisture-wicking. Cushioned sole. Ankle support.',
-        image: 'https://images.unsplash.com/photo-1595956553325-7fd7e0eb6c6f?w=400&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
         sizes: ['One Size Fits All'],
         hasSizes: false
     },
@@ -190,7 +190,7 @@ const products = [
         price: 799, 
         category: 'accessories', 
         details: 'Durable plastic. Stackable design. Bright color for visibility.',
-        image: 'https://images.unsplash.com/photo-1577223625819-4f7b2196a51d?w=400&h=400&fit=crop',
+        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
         sizes: ['Standard Set'],
         hasSizes: false
     }
