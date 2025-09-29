@@ -1,0 +1,17 @@
+{
+  "name": "cleats-football-shop",
+  "version": "1.0.0",
+  "description": "Professional football accessories e-commerce store",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": ["ecommerce", "football", "sports", "shop"],
+  "author": "CLEATS Team",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
+}

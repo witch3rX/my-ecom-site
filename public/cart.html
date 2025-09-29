@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Cart - The IR7 Football Shop</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        .cart-page {
+            background-color: #ffffff;
+            padding-top: 76px;
+        }
+        .cart-section {
+            padding-top: 50px;
+            padding-bottom: 50px;
+        }
+    </style>
+</head>
+<body class="cart-page">
+    <!-- Updated Header -->
+    <header class="site-header position-fixed w-100 top-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">
+                    <i class="fas fa-futbol me-2" style="color: #dc3545;"></i>IR7
+                </a>
+                <div class="collapse navbar-collapse justify-content-end">
+                    <ul class="navbar-nav align-items-center">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#shop">
+                                <i class="fas fa-shirt me-1"></i>Shop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="auth.html">
+                                <i class="fas fa-user me-1"></i>Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active position-relative" href="cart.html">
+                                <i class="fas fa-shopping-cart me-1"></i>Cart 
+                                <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Cart Content -->
+    <section class="cart-section">
+        <div class="container mt-5 pt-4">
+            <h1 class="text-center fw-bold mb-5">Your Shopping Cart</h1>
+            
+            <div class="row">
+                <!-- Cart Items Column (Large: 8, Medium: 7) -->
+                <div class="col-lg-8 col-md-7 mb-4">
+                    <div class="card p-3 shadow-sm border-0">
+                         <!-- Cart items will be rendered here by cart.js -->
+                        <div id="cart-content" class="p-2">
+                            <p class="text-center text-muted">Loading cart items...</p>
+                        </div>
+                        <div class="p-2 border-top mt-3">
+                            <a href="index.html#shop" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Cart Summary Column (Large: 4, Medium: 5) -->
+                <div class="col-lg-4 col-md-5" id="cart-summary-col">
+                    <!-- Cart summary will be rendered here by cart.js -->
+                    <div id="cart-summary">
+                        <p class="text-center text-muted">Loading summary...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer id="footer-top" class="bg-dark text-white py-4">
+        <div class="container text-center">
+            <p class="mb-0 small">© 2024 The IR7 Football Shop. All prices in BDT. Shipping: ৳110 (Free over ৳3,000)</p>
+        </div>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Use components/cart.js to handle the cart logic and rendering -->
+    <script type="module" src="components/cart.js"></script>
+    <!-- Use app.js to update the global cart count in the header -->
+    <script type="module">
+        import { updateCartCount } from './app.js';
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>The IR7 Football Shop - Premium Football Gear</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="format-detection" content="telephone=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="author" content="IR7 Football Shop">
+    <meta name="keywords" content="football, soccer, jerseys, boots, balls, sports gear, Bangladesh">
+    <meta name="description" content="The IR7 Football Shop - Your premium destination for affordable football jerseys, boots, balls and accessories in Bangladesh">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div id="main-wrapper" class="overflow-hidden">
+
+        <!-- Custom Toast/Pop-up Container for Cart Confirmation -->
+        <div id="toast-container" class="toast-container position-fixed bottom-0 end-0 p-3">
+            <div id="cartToast" class="toast align-items-center text-white border-0" role="alert" aria-live="assertive" aria-atomic="true">
+                <div class="d-flex">
+                    <div class="toast-body" id="toast-message">
+                        <!-- Message will be inserted here by JavaScript -->
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+                </div>
+            </div>
+        </div>
+
+        <header class="site-header position-fixed w-100 top-0">
+            <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+                <div class="container-fluid">
+                    <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">
+                        <i class="fas fa-futbol me-2" style="color: #dc3545;"></i>IR7
+                    </a>
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+                    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                        <ul class="navbar-nav align-items-center">
+                            <li class="nav-item">
+                                <a class="nav-link active" aria-current="page" href="index.html">
+                                    <i class="fas fa-home me-1"></i>Home
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#shop">
+                                    <i class="fas fa-shirt me-1"></i>Shop
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="auth.html">
+                                    <i class="fas fa-user me-1"></i>Sign In
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link position-relative" href="cart.html">
+                                    <i class="fas fa-shopping-cart me-1"></i>Cart 
+                                    <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+        </header>
+
+        <section id="hero" class="text-white position-relative" style="margin-top: 76px; height: calc(100vh - 76px);">
+            <div class="container-fluid h-100">
+                <div class="row h-100 align-items-center">
+                    <div class="col-md-8 mx-auto text-center">
+                        <h1 class="display-2 fw-bold text-uppercase mb-4">The IR7 Football Shop</h1>
+                        <p class="fs-3 mb-4">Premium Football Gear at Affordable Prices</p>
+                        <p class="fs-5 mb-4">Official jerseys, professional boots, match balls, and accessories</p>
+                        <a href="#shop" class="btn btn-danger btn-lg px-5 py-3 fs-5">
+                            <i class="fas fa-bolt me-2"></i>Shop Now
+                        </a>
+                        <div class="mt-4">
+                            <small class="opacity-75">
+                                <i class="fas fa-truck me-1"></i> Free Shipping Over ৳3,000 • 
+                                <i class="fas fa-shield-alt me-1"></i> Secure Payment • 
+                                <i class="fas fa-undo me-1"></i> 30-Day Returns
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop" class="py-5 my-5">
+            <div class="container">
+                <div class="row mb-4">
+                    <div class="col-md-12 text-center">
+                        <h2 class="text-center mb-4">Our Products</h2>
+                        <p class="lead text-muted mb-4">All prices in Bangladeshi Taka (BDT)</p>
+                        <div class="category-filters my-4 d-flex justify-content-center flex-wrap">
+                            <a href="#all" class="btn btn-outline-dark category-filter active" data-category="all">All</a>
+                            <a href="#jerseys" class="btn btn-outline-dark category-filter" data-category="jerseys">Jerseys</a>
+                            <a href="#boots" class="btn btn-outline-dark category-filter" data-category="boots">Boots</a>
+                            <a href="#balls" class="btn btn-outline-dark category-filter" data-category="balls">Balls</a>
+                            <a href="#accessories" class="btn btn-outline-dark category-filter" data-category="accessories">Accessories</a>
+                        </div>
+                    </div>
+                </div>
+                <div id="app-container"></div>
+            </div>
+        </section>
+
+        <section id="features" class="py-5 bg-light">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-item p-4">
+                            <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+                            <h4>Free Shipping</h4>
+                            <p class="text-muted">Free delivery on orders over ৳3,000. Standard shipping ৳110.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-item p-4">
+                            <i class="fas fa-undo-alt fa-3x text-primary mb-3"></i>
+                            <h4>Easy Returns</h4>
+                            <p class="text-muted">30-day return policy. No questions asked.</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4 mb-4">
+                        <div class="feature-item p-4">
+                            <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
+                            <h4>Secure Payment</h4>
+                            <p class="text-muted">Your payment information is safe with us.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <footer id="footer-top" class="bg-dark text-white py-5 mt-5">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-4">
+                        <h5>The IR7 Football Shop</h5>
+                        <p>Affordable premium football gear in Bangladesh.</p>
+                        <div class="social-links">
+                            <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                            <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                            <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Quick Links</h5>
+                        <ul class="list-unstyled">
+                            <li><a href="index.html" class="text-white-50">Home</a></li>
+                            <li><a href="#shop" class="text-white-50">Shop</a></li>
+                            <li><a href="auth.html" class="text-white-50">Sign In</a></li>
+                            <li><a href="cart.html" class="text-white-50">Cart</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-md-4">
+                        <h5>Contact Us</h5>
+                        <p class="text-white-50"><i class="fas fa-envelope me-2"></i>info@ir7shop.com</p>
+                        <p class="text-white-50"><i class="fas fa-phone me-2"></i>+880 1234 567890</p>
+                        <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i>Dhaka, Bangladesh</p>
+                    </div>
+                </div>
+                <div class="row mt-4">
+                    <div class="col-12 text-center">
+                        <p class="text-white-50 small mb-2">All prices are in Bangladeshi Taka (BDT) • Shipping: ৳110 (Free over ৳3,000)</p>
+                        <p class="text-white-50 small">© 2024 The IR7 Football Shop. All rights reserved.</p>
+                    </div>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="app.js"></script>
+</body>
+</html>
