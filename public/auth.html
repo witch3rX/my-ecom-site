@@ -238,6 +238,31 @@
     <script type="module">
         import { AuthSystem } from './components/auth.js';
 
+        // Create default admin user if not exists
+        function createDefaultAdmin() {
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const adminExists = users.find(user => user.email === 'admin@ir7.com');
+            
+            if (!adminExists) {
+                const adminUser = {
+                    id: 'admin001',
+                    firstName: 'Admin',
+                    lastName: 'User',
+                    email: 'admin@ir7.com',
+                    password: 'admin123',
+                    phone: '+8801000000000',
+                    createdAt: new Date().toISOString(),
+                    isAdmin: true
+                };
+                users.push(adminUser);
+                localStorage.setItem('users', JSON.stringify(users));
+                console.log('Default admin user created');
+            }
+        }
+
+        // Call this when auth page loads
+        createDefaultAdmin();
+
         // Toast function for auth page
         function showToast(message, type = 'success') {
             const toast = document.getElementById('authToast');

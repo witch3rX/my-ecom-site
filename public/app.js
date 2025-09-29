@@ -190,5 +190,12 @@ if (document.readyState === 'loading') {
 // Hashchange should still work independently
 window.addEventListener('hashchange', router);
 
+// Add admin access shortcut (Ctrl+Alt+A)
+document.addEventListener('keydown', (e) => {
+    if (e.ctrlKey && e.altKey && e.key === 'a') {
+        window.location.href = 'admin.html';
+    }
+});
+
 // Export for other modules
 export { router, showCheckoutModal };

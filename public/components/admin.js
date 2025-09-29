@@ -1,24 +1,104 @@
-// Admin Panel JavaScript
+// Enhanced Admin Panel JavaScript with Authentication
 class AdminPanel {
     constructor() {
         this.currentTab = 'dashboard';
+        this.adminUsers = ['admin@ir7.com']; // List of admin emails
         this.init();
     }
 
     init() {
-        this.setupEventListeners();
-        this.loadDashboard();
         this.checkAdminAccess();
     }
 
     checkAdminAccess() {
-        // Simple admin check - in production, use proper authentication
         const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+        
         if (!currentUser) {
-            alert('Please log in as admin');
-            window.location.href = 'auth.html';
+            this.showLoginModal();
             return;
         }
+
+        // Check if current user is admin
+        if (!this.isAdminUser(currentUser.email)) {
+            this.showAccessDenied();
+            return;
+        }
+
+        this.setupAdminUI(currentUser);
+        this.setupEventListeners();
+        this.loadDashboard();
+    }
+
+    isAdminUser(email) {
+        return this.adminUsers.includes(email.toLowerCase());
+    }
+
+    showLoginModal() {
+        const loginModal = document.createElement('div');
+        loginModal.className = 'modal fade show d-block';
+        loginModal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        loginModal.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Admin Login Required</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>Please log in with an admin account to access the admin panel.</p>
+                        <div class="alert alert-warning">
+                            <strong>Demo Admin Credentials:</strong><br>
+                            Email: admin@ir7.com<br>
+                            Password: admin123
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" onclick="window.location.href='auth.html'">
+                            Go to Login
+                        </button>
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='index.html'">
+                            Back to Shop
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(loginModal);
+    }
+
+    showAccessDenied() {
+        const accessDenied = document.createElement('div');
+        accessDenied.className = 'modal fade show d-block';
+        accessDenied.style.backgroundColor = 'rgba(0,0,0,0.5)';
+        accessDenied.innerHTML = `
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title text-danger">Access Denied</h5>
+                    </div>
+                    <div class="modal-body">
+                        <p>You don't have permission to access the admin panel.</p>
+                        <p class="text-muted">Only authorized admin users can access this section.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="window.location.href='index.html'">
+                            Back to Shop
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(accessDenied);
+    }
+
+    setupAdminUI(currentUser) {
+        // Show admin content
+        document.querySelector('.admin-container').style.display = 'block';
+        
+        // Update admin welcome message
+        const welcomeElement = document.createElement('div');
+        welcomeElement.className = 'navbar-text ms-3';
+        welcomeElement.innerHTML = `<small class="text-white">Welcome, ${currentUser.firstName} (Admin)</small>`;
+        document.querySelector('.navbar-nav').appendChild(welcomeElement);
     }
 
     setupEventListeners() {
@@ -32,17 +112,17 @@ class AdminPanel {
         });
 
         // Add product button
-        document.getElementById('add-product-btn').addEventListener('click', () => {
+        document.getElementById('add-product-btn')?.addEventListener('click', () => {
             this.showProductModal();
         });
 
         // Save product
-        document.getElementById('save-product').addEventListener('click', () => {
+        document.getElementById('save-product')?.addEventListener('click', () => {
             this.saveProduct();
         });
 
         // Logout
-        document.getElementById('admin-logout').addEventListener('click', (e) => {
+        document.getElementById('admin-logout')?.addEventListener('click', (e) => {
             e.preventDefault();
             localStorage.removeItem('currentUser');
             window.location.href = 'index.html';
@@ -110,6 +190,8 @@ class AdminPanel {
             const orders = await response.json();
             
             const tbody = document.getElementById('orders-table-body');
+            if (!tbody) return;
+
             tbody.innerHTML = orders.map(order => `
                 <tr>
                     <td>${order.id}</td>
@@ -170,6 +252,8 @@ class AdminPanel {
             const products = await response.json();
             
             const tbody = document.getElementById('products-table-body');
+            if (!tbody) return;
+
             tbody.innerHTML = products.map(product => `
                 <tr>
                     <td>${product.id}</td>
@@ -208,6 +292,7 @@ class AdminPanel {
     loadUsers() {
         const users = JSON.parse(localStorage.getItem('users')) || [];
         const tbody = document.getElementById('users-table-body');
+        if (!tbody) return;
         
         tbody.innerHTML = users.map(user => `
             <tr>
@@ -221,7 +306,10 @@ class AdminPanel {
     }
 
     showProductModal(product = null) {
-        const modal = new bootstrap.Modal(document.getElementById('productModal'));
+        const modalElement = document.getElementById('productModal');
+        if (!modalElement) return;
+
+        const modal = new bootstrap.Modal(modalElement);
         const form = document.getElementById('product-form');
         
         if (product) {
@@ -232,6 +320,7 @@ class AdminPanel {
             document.getElementById('product-description').value = product.description;
             document.getElementById('product-price').value = product.price;
             document.getElementById('product-image').value = product.image;
+            document.getElementById('product-sizes').value = product.sizes ? product.sizes.join(', ') : '';
             document.querySelector('.modal-title').textContent = 'Edit Product';
         } else {
             // Add mode
@@ -250,8 +339,9 @@ class AdminPanel {
             description: document.getElementById('product-description').value,
             price: parseInt(document.getElementById('product-price').value),
             image: document.getElementById('product-image').value,
-            hasSizes: document.getElementById('product-category').value === 'jerseys' || 
-                      document.getElementById('product-category').value === 'boots'
+            sizes: document.getElementById('product-sizes').value ? 
+                   document.getElementById('product-sizes').value.split(',').map(s => s.trim()) : [],
+            hasSizes: document.getElementById('product-sizes').value !== ''
         };
 
         // Basic validation
@@ -260,15 +350,28 @@ class AdminPanel {
             return;
         }
 
-        // Note: In a real application, you would send this to your backend API
-        // For now, we'll just show a success message
-        alert('Product saved successfully! In a real application, this would be saved to the database.');
-        
-        const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
-        modal.hide();
-        
-        // Reload products
-        this.loadProducts();
+        try {
+            // Send to server
+            const response = await fetch('/api/admin/products', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            });
+
+            if (response.ok) {
+                alert('Product saved successfully!');
+                const modal = bootstrap.Modal.getInstance(document.getElementById('productModal'));
+                modal.hide();
+                this.loadProducts();
+            } else {
+                alert('Error saving product');
+            }
+        } catch (error) {
+            console.error('Error saving product:', error);
+            alert('Error saving product');
+        }
     }
 
     editProduct(productId) {
@@ -286,9 +389,21 @@ class AdminPanel {
 
     deleteProduct(productId) {
         if (confirm('Are you sure you want to delete this product?')) {
-            // Note: In a real application, you would send DELETE request to your API
-            alert('Product deleted! In a real application, this would remove it from the database.');
-            this.loadProducts();
+            fetch(`/api/admin/products/${productId}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert('Product deleted successfully!');
+                    this.loadProducts();
+                } else {
+                    alert('Error deleting product');
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting product:', error);
+                alert('Error deleting product');
+            });
         }
     }
 }
