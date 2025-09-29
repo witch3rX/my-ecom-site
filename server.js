@@ -36,45 +36,45 @@ const products = [
     // Jerseys - 1299 Taka
     { 
         id: 1, 
-        name: 'Manchester United Home Jersey 2024', 
+        name: 'Manchester United Home Jersey 2025-26', 
         description: 'Official home jersey for the current season.', 
         price: 1299, 
         category: 'jerseys', 
         details: 'Available in S, M, L, XL. 100% Polyester. Authentic patch included.',
-        image: 'https://images.unsplash.com/photo-1529900748604-07564a03e7a6?w=400&h=400&fit=crop',
+        image: '/images/products/manu.jpg',
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         hasSizes: true 
     },
     { 
         id: 2, 
-        name: 'Real Madrid Away Jersey 2024', 
-        description: 'Limited edition away jersey featuring sleek design.', 
+        name: 'Real Madrid Home Jersey 2025-26', 
+        description: 'Limited edition home jersey featuring sleek design.', 
         price: 1299, 
         category: 'jerseys', 
         details: 'Customizable with name and number. Climacool ventilation.',
-        image: 'https://images.unsplash.com/photo-1614624532983-1fe212cff6f5?w=400&h=400&fit=crop',
+        image: '/images/products/rm.jpg',
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         hasSizes: true
     },
     { 
         id: 3, 
-        name: 'Barcelona Third Jersey 2024', 
-        description: 'Special edition third jersey with unique design.', 
+        name: 'Barcelona Home Jersey 2025-26', 
+        description: 'Special edition home jersey with unique design.', 
         price: 1299, 
         category: 'jerseys', 
         details: 'Regular fit. Premium edition. Official licensed product.',
-        image: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=400&h=400&fit=crop',
+        image: '/images/products/barca.jpg',
         sizes: ['S', 'M', 'L', 'XL'],
         hasSizes: true
     },
     { 
         id: 4, 
-        name: 'Argentina National Jersey', 
-        description: 'Official Argentina national team jersey.', 
+        name: 'Brazil National Jersey', 
+        description: 'Official Brazil national team jersey.', 
         price: 1299, 
         category: 'jerseys', 
         details: 'Messi edition. Lightweight fabric. Moisture wicking.',
-        image: 'https://images.unsplash.com/photo-1543326727-cf6c39e8f84c?w=400&h=400&fit=crop',
+        image: '/images/products/bra.jpg',
         sizes: ['S', 'M', 'L', 'XL', 'XXL'],
         hasSizes: true
     },
@@ -87,7 +87,7 @@ const products = [
         price: 4999, 
         category: 'boots', 
         details: 'Textured finish for better ball control. Dynamic Fit collar.',
-        image: 'https://images.unsplash.com/photo-1549298916-b41d501d3772?w=400&h=400&fit=crop',
+        image: '/images/products/gx.jpg',
         sizes: ['6', '7', '8', '9', '10', '11'],
         hasSizes: true
     },
@@ -98,7 +98,7 @@ const products = [
         price: 4999, 
         category: 'boots', 
         details: 'Hybridtouch upper for perfect fit. Controlskin technology.',
-        image: 'https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=400&h=400&fit=crop',
+        image: '/images/products/add.jpg',
         sizes: ['6', '7', '8', '9', '10', '11'],
         hasSizes: true
     },
@@ -109,7 +109,7 @@ const products = [
         price: 4999, 
         category: 'boots', 
         details: 'FUZIONFIT+ compression band. Dynamic Motion System outsole.',
-        image: 'https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=400&h=400&fit=crop',
+        image: '/images/products/puma.jpg',
         sizes: ['6', '7', '8', '9', '10'],
         hasSizes: true
     },
@@ -122,7 +122,7 @@ const products = [
         price: 1999, 
         category: 'balls', 
         details: 'Butylene bladder for best air retention. All-weather use. Size 5.',
-        image: 'https://images.unsplash.com/photo-1614632231383-9a8a71914364?w=400&h=400&fit=crop',
+        image: '/images/products/addball.jpg',
         sizes: ['Standard Size 5'],
         hasSizes: false
     },
@@ -133,7 +133,7 @@ const products = [
         price: 1999, 
         category: 'balls', 
         details: 'Aerow Trac grooves for accurate flight. All conditions ball.',
-        image: 'https://images.unsplash.com/photo-1575361204480-aadea25e6e68?w=400&h=400&fit=crop',
+        image: '/images/products/nikeball.jpg',
         sizes: ['Standard Size 5'],
         hasSizes: false
     },
@@ -144,7 +144,7 @@ const products = [
         price: 1999, 
         category: 'balls', 
         details: 'Low-absorption exterior. 32-panel design for reduced drag.',
-        image: 'https://images.unsplash.com/photo-1511882150382-421056c89033?w=400&h=400&fit=crop',
+        image: '/images/products/pumaball.jpg',
         sizes: ['Standard Size 5'],
         hasSizes: false
     },
@@ -157,7 +157,7 @@ const products = [
         price: 599, 
         category: 'accessories', 
         details: 'Lightweight polymer shell. Comfortable foam backing.',
-        image: 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400&h=400&fit=crop',
+        image: '/images/products/shin.jpg',
         sizes: ['One Size'],
         hasSizes: false
     },
@@ -168,7 +168,7 @@ const products = [
         price: 1499, 
         category: 'accessories', 
         details: 'Negative cut. Finger protection spines. All-weather grip.',
-        image: 'https://images.unsplash.com/photo-1599058917765-660d3e5cfb6a?w=400&h=400&fit=crop',
+        image: '/images/products/gk.jpg',
         sizes: ['S', 'M', 'L', 'XL'],
         hasSizes: true
     },
@@ -179,7 +179,7 @@ const products = [
         price: 499, 
         category: 'accessories', 
         details: 'Moisture-wicking. Cushioned sole. Ankle support.',
-        image: 'https://images.unsplash.com/photo-1595956553325-7fd7e0eb6c6f?w=400&h=400&fit=crop',
+        image: '/images/products/socks.jpg',
         sizes: ['One Size Fits All'],
         hasSizes: false
     },
@@ -190,7 +190,7 @@ const products = [
         price: 799, 
         category: 'accessories', 
         details: 'Durable plastic. Stackable design. Bright color for visibility.',
-        image: 'https://images.unsplash.com/photo-1577223625819-4f7b2196a51d?w=400&h=400&fit=crop',
+        image: '/images/products/cone.jpg',
         sizes: ['Standard Set'],
         hasSizes: false
     }

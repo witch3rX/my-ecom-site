@@ -8,6 +8,34 @@ function formatPrice(price) {
 }
 
 /**
+ * Get image URL with fallback
+ */
+function getImageUrl(productImage) {
+    // If no image provided, use placeholder
+    if (!productImage) {
+        return 'https://via.placeholder.com/300x200/007bff/fff?text=IR7+Football';
+    }
+    
+    // If it's a local image path (starts with /images/)
+    if (productImage.startsWith('/images/')) {
+        return productImage;
+    }
+    
+    // If it's already a full URL (http/https), use it directly
+    if (productImage.startsWith('http://') || productImage.startsWith('https://')) {
+        return productImage;
+    }
+    
+    // For any other case, assume it's a local image path and prepend if needed
+    if (productImage.startsWith('images/')) {
+        return '/' + productImage;
+    }
+    
+    // Default fallback
+    return 'https://via.placeholder.com/300x200/007bff/fff?text=IR7+Football';
+}
+
+/**
  * Enhanced add to cart function with size support
  */
 export function addToCart(product, selectedSize = null) {
@@ -101,7 +129,7 @@ export async function renderProductsPage(container, category) {
             
             productCard.innerHTML = `
                 <div class="product-image-container">
-                    <img src="${product.image || 'https://via.placeholder.com/300x200/007bff/fff?text=IR7+Football'}" 
+                    <img src="${getImageUrl(product.image)}" 
                          alt="${product.name}" 
                          class="product-image"
                          onerror="this.src='https://via.placeholder.com/300x200/007bff/fff?text=IR7+Football'">

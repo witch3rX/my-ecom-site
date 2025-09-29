@@ -8,6 +8,18 @@ function formatPrice(price) {
     return '৳' + price.toLocaleString('en-BD');
 }
 
+/**
+ * Get image URL with fallback for cart
+ */
+function getImageUrl(productImage) {
+    // If it's a local image path
+    if (productImage && productImage.startsWith('/images/')) {
+        return productImage;
+    }
+    // If it's an external URL, use it directly
+    return productImage || 'https://via.placeholder.com/100x100/dc3545/fff?text=IR7';
+}
+
 // Enhanced cart management functions
 function updateQuantity(productId, size, newQuantity) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -302,7 +314,7 @@ export function renderCartPage() {
         
         cartItemsHtml += `
             <div class="cart-item fade-in" id="cart-item-${item.id}-${item.selectedSize}">
-                <img src="${item.image || 'https://via.placeholder.com/100x100/dc3545/fff?text=IR7'}" 
+                <img src="${getImageUrl(item.image)}" 
                      alt="${item.name}" 
                      class="cart-item-image"
                      onerror="this.src='https://via.placeholder.com/100x100/dc3545/fff?text=IR7'">
