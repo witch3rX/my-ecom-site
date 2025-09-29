@@ -168,10 +168,27 @@ function initApp() {
     console.log('IR7 Football Shop initialized successfully');
 }
 
-// Event listeners
+// Track initialization state to prevent duplicate calls
+let appInitialized = false;
+
+function initializeAppOnce() {
+    if (!appInitialized) {
+        appInitialized = true;
+        initApp();
+    }
+}
+
+// Use only one event listener instead of multiple
+if (document.readyState === 'loading') {
+    // Loading hasn't finished yet, wait for DOMContentLoaded
+    document.addEventListener('DOMContentLoaded', initializeAppOnce);
+} else {
+    // DOMContentLoaded has already fired
+    initializeAppOnce();
+}
+
+// Hashchange should still work independently
 window.addEventListener('hashchange', router);
-window.addEventListener('load', initApp);
-document.addEventListener('DOMContentLoaded', initApp);
 
 // Export for other modules
 export { router, showCheckoutModal };
