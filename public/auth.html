@@ -296,8 +296,8 @@
             }
         };
 
-        // Sign In Form
-        document.getElementById('signinForm').addEventListener('submit', function(e) {
+        // Sign In Form - FIXED: Added async/await
+        document.getElementById('signinForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const email = document.getElementById('signinEmail').value.trim();
             const password = document.getElementById('signinPassword').value;
@@ -308,7 +308,7 @@
             }
 
             try {
-                const user = AuthSystem.signIn(email, password);
+                const user = await AuthSystem.signIn(email, password);
                 showToast(`Welcome back, ${user.firstName}!`, 'success');
                 setTimeout(() => {
                     window.location.href = 'index.html';
@@ -318,8 +318,8 @@
             }
         });
 
-        // Sign Up Form
-        document.getElementById('signupForm').addEventListener('submit', function(e) {
+        // Sign Up Form - FIXED: Added async/await
+        document.getElementById('signupForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             const formData = {
                 firstName: document.getElementById('signupFirstName').value.trim(),
@@ -352,7 +352,7 @@
             }
 
             try {
-                const user = AuthSystem.signUp(formData);
+                const user = await AuthSystem.signUp(formData);
                 showToast(`Account created successfully! Welcome, ${user.firstName}!`, 'success');
                 setTimeout(() => {
                     window.location.href = 'index.html';

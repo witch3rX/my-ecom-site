@@ -1,0 +1,29 @@
+[
+  {
+    "id": "1759365366843",
+    "firstName": "Admin",
+    "lastName": "User",
+    "email": "admin@ir7.com",
+    "password": "admin123",
+    "phone": "01629377934",
+    "createdAt": "2025-10-02T00:36:06.843Z",
+    "orders": []
+  },
+  {
+    "id": "1759368428374",
+    "firstName": "Iram",
+    "lastName": "Ridwan",
+    "email": "iramridwan123@gmai.com",
+    "password": "123456",
+    "phone": "01629377934789",
+    "createdAt": "2025-10-02T01:27:08.374Z",
+    "orders": [
+      {
+        "orderId": "IR71759368469695",
+        "date": "2025-10-02T01:27:49.695Z",
+        "total": 1409,
+        "status": "pending"
+      }
+    ]
+  }
+]

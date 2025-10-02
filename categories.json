@@ -1,0 +1,32 @@
+[
+  {
+    "id": 1,
+    "name": "jerseys",
+    "displayName": "Jerseys",
+    "isActive": true
+  },
+  {
+    "id": 2,
+    "name": "boots",
+    "displayName": "Boots",
+    "isActive": true
+  },
+  {
+    "id": 3,
+    "name": "balls",
+    "displayName": "Balls",
+    "isActive": true
+  },
+  {
+    "id": 4,
+    "name": "accessories",
+    "displayName": "Accessories",
+    "isActive": true
+  },
+  {
+    "id": 5,
+    "name": "turf",
+    "displayName": "Turf Shoes",
+    "isActive": true
+  }
+]

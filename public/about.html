@@ -1,0 +1,256 @@
+[file name]: about.html
+[file content begin]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>About Us - The IR7 Football Shop</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .about-hero {
+            background: linear-gradient(135deg, rgba(220, 53, 69, 0.9), rgba(33, 37, 41, 0.9));
+            color: white;
+            padding: 100px 0 50px;
+            margin-top: 76px;
+        }
+        .mission-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        .mission-card:hover {
+            transform: translateY(-5px);
+        }
+        .team-member {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+        }
+        .team-member:hover {
+            background: #f8f9fa;
+            transform: translateY(-5px);
+        }
+        .stats-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 80px 0;
+        }
+        .stat-number {
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header position-fixed w-100 top-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">
+                    <i class="fas fa-futbol me-2" style="color: #dc3545;"></i>IR7
+                </a>
+                <div class="collapse navbar-collapse justify-content-end">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#shop">
+                                <i class="fas fa-shirt me-1"></i>Shop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">
+                                <i class="fas fa-info-circle me-1"></i>About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">
+                                <i class="fas fa-envelope me-1"></i>Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="auth.html">
+                                <i class="fas fa-user me-1"></i>Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="cart.html">
+                                <i class="fas fa-shopping-cart me-1"></i>Cart 
+                                <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="about-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6">
+                    <h1 class="display-4 fw-bold mb-4">About IR7 Football Shop</h1>
+                    <p class="lead mb-4">Your trusted partner for premium football gear in Bangladesh since 2020</p>
+                </div>
+                <div class="col-lg-6 text-center">
+                    <i class="fas fa-futbol fa-10x opacity-50"></i>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission & Story -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mb-4">
+                    <div class="mission-card p-5 h-100">
+                        <i class="fas fa-bullseye fa-3x text-primary mb-4"></i>
+                        <h3 class="mb-4">Our Mission</h3>
+                        <p class="mb-4">To provide football enthusiasts in Bangladesh with access to high-quality, affordable football gear while promoting the sport and supporting local talent development.</p>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Quality products at fair prices</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Exceptional customer service</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Fast and reliable delivery</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>Supporting local football communities</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-6 mb-4">
+                    <div class="mission-card p-5 h-100">
+                        <i class="fas fa-history fa-3x text-primary mb-4"></i>
+                        <h3 class="mb-4">Our Story</h3>
+                        <p class="mb-4">Founded in 2020 by a group of passionate football players, IR7 started as a small local shop in Dhaka with a simple goal: make quality football equipment accessible to everyone.</p>
+                        <p class="mb-4">What began as a humble storefront has grown into Bangladesh's premier online football shop, serving thousands of satisfied customers nationwide.</p>
+                        <p>We understand the needs of football players because we are football players ourselves. Every product in our catalog is tested and approved by our team.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats-section">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">5,000+</div>
+                    <p class="mb-0">Happy Customers</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">50+</div>
+                    <p class="mb-0">Product Varieties</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">64</div>
+                    <p class="mb-0">Cities Served</p>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <div class="stat-number">98%</div>
+                    <p class="mb-0">Customer Satisfaction</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Why Choose Us -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="fw-bold">Why Choose IR7?</h2>
+                    <p class="lead text-muted">What makes us different from other football shops</p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4">
+                        <i class="fas fa-award fa-3x text-primary mb-3"></i>
+                        <h5>Authentic Products</h5>
+                        <p class="text-muted">All our products are 100% authentic with manufacturer warranties</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4">
+                        <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
+                        <h5>Fast Delivery</h5>
+                        <p class="text-muted">Same-day delivery in Dhaka, 2-3 days nationwide</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="text-center p-4">
+                        <i class="fas fa-headset fa-3x text-primary mb-3"></i>
+                        <h5>Expert Support</h5>
+                        <p class="text-muted">Our team includes former players who understand your needs</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">The IR7 Football Shop</h5>
+                    <p>Your premium destination for affordable football jerseys, boots, balls and accessories in Bangladesh</p>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="index.html#shop" class="text-white-50">Shop</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Customer Service</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="return-policy.html" class="text-white-50">Return Policy</a></li>
+                        <li class="mb-2"><a href="shipping.html" class="text-white-50">Shipping Info</a></li>
+                        <li class="mb-2"><a href="faq.html" class="text-white-50">FAQ</a></li>
+                        <li class="mb-2"><a href="size-guide.html" class="text-white-50">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Contact Info</h5>
+                    <p class="text-white-50 mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Football Street, Dhaka 1212</p>
+                    <p class="text-white-50 mb-2"><i class="fas fa-phone me-2"></i>+880 1234 567890</p>
+                    <p class="text-white-50 mb-2"><i class="fas fa-envelope me-2"></i>info@ir7shop.com</p>
+                    <p class="text-white-50"><i class="fas fa-clock me-2"></i>Mon-Sat: 9AM-6PM</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-white-50 small mb-0">© 2024 The IR7 Football Shop. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { updateCartCount } from './app.js';
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+</body>
+</html>
+[file content end]

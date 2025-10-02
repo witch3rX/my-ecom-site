@@ -1,464 +1,801 @@
+// cart.js (Located in components/cart.js)
+
+// =========================================================================
+// I. MODULE IMPORTS
+// =========================================================================
+
+// Import essential functions from the core app module
 import { updateCartCount, showToast } from '../app.js';
+// Import the Authentication System for checkout logic
 import { AuthSystem } from './auth.js';
 
+
+// =========================================================================
+// II. HELPER FUNCTIONS
+// =========================================================================
+
 /**
- * Format price in BDT with commas
+ * Format price in BDT (Bangladeshi Taka) with commas for readability.
+ * @param {number} price - The numerical price value.
+ * @returns {string} The formatted price string.
  */
 function formatPrice(price) {
-    return '৳' + price.toLocaleString('en-BD');
+    if (typeof price !== 'number' || isNaN(price)) {
+        return '৳0';
+    }
+    // Ensures price is rounded for display and formatted with BD locale
+    return '৳' + Math.round(price).toLocaleString('en-BD');
 }
 
 /**
- * Get image URL with fallback for cart
+ * Get image URL with a local path check and a placeholder fallback for the cart view.
+ * @param {string} productImage - The source image path or URL.
+ * @returns {string} A valid image URL.
  */
 function getImageUrl(productImage) {
     // If it's a local image path
     if (productImage && productImage.startsWith('/images/')) {
         return productImage;
     }
-    // If it's an external URL, use it directly
+    // Fallback to a red placeholder image
     return productImage || 'https://via.placeholder.com/100x100/dc3545/fff?text=IR7';
 }
+/**
+ * Generates a simple PDF receipt using jsPDF and triggers a download.
+ * @param {object} order - The final order object.
+ */
+/**
+ * Generates a simple PDF receipt using jsPDF and triggers a download.
+ * @param {object} order - The final order object.
+ */
+function generatePDFReceipt(order) {
+    // Check if the jsPDF library is loaded (Make sure you added the script tag in cart.html!)
+    if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
+        showToast("Error: PDF library not loaded. Please ensure the jspdf script is included in cart.html.", "error");
+        return;
+    }
 
-// Enhanced cart management functions
+    // Initialize jsPDF
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+    
+    // --- Data Safety and Formatting ---
+    // Ensure nested objects exist, or default to an empty object {}
+    const customer = order.customer || {};
+    const shipping = (typeof order.shippingAddress === 'object' && order.shippingAddress !== null) 
+                     ? order.shippingAddress 
+                     : {}; // <<< THIS IS CRITICAL
+
+    const customerName = (customer.firstName && customer.lastName) ? 
+                         `${customer.firstName} ${customer.lastName}` : 
+                         customer.firstName || customer.lastName || 'Valued Customer';
+                         
+    const phone = shipping.phone || order.shippingPhone || 'N/A';
+    const email = customer.email || 'N/A';
+    
+    // Safely construct the address lines for the PDF
+    const addressLine1 = shipping.address1 || 'N/A';
+    const addressLine2 = shipping.address2 ? `, ${shipping.address2}` : '';
+    const cityPostcode = `${shipping.city || ''}, ${shipping.postcode || ''}`.trim().replace(/,(\s*,){1,}/g, ',').replace(/^,|,$/g, '') || 'N/A';
+    const country = shipping.country || 'N/A';
+    
+    // Set initial text position
+    let y = 15;
+    
+    // --- Header ---
+    doc.setFontSize(22);
+    doc.setTextColor(220, 53, 69); // Bootstrap Red
+    doc.text("IR7 Football Shop Receipt", 105, y, null, null, 'center');
+    y += 10;
+    
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text(`Date: ${new Date(order.orderDate).toLocaleDateString()}`, 105, y, null, null, 'center');
+    y += 10;
+    
+    // --- Order Details ---
+    doc.setFontSize(14);
+    doc.setTextColor(0, 0, 0);
+    doc.text("Order & Customer Details", 10, y);
+    doc.line(10, y + 2, 200, y + 2); // Horizontal line
+    y += 8;
+
+    doc.setFontSize(10);
+    doc.text(`Order ID: ${order.orderId}`, 10, y);
+    doc.text(`Customer: ${customerName}`, 100, y);
+    y += 6;
+    doc.text(`Payment Method: ${order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment (Simulated)'}`, 10, y);
+    doc.text(`Email: ${email}`, 100, y);
+    y += 10;
+    
+    // --- Shipping Address ---
+    doc.setFontSize(12);
+    doc.text("Shipping To:", 10, y);
+    y += 6;
+    doc.setFontSize(10);
+    
+    // Print the structured address lines
+    doc.text(`Address: ${addressLine1 + addressLine2}`, 10, y);
+    y += 6;
+    doc.text(`City/Postcode: ${cityPostcode}`, 10, y);
+    y += 6;
+    doc.text(`Country: ${country}`, 10, y);
+    y += 6;
+    doc.text(`Phone: ${phone}`, 10, y);
+    y += 10;
+
+    // --- Items Table ---
+    const headers = [['Product', 'Size', 'Qty', 'Price', 'Total']];
+    const data = (order.items || []).map(item => [
+        item.name,
+        item.size,
+        item.quantity,
+        formatPrice(item.price),
+        formatPrice(item.price * item.quantity)
+    ]);
+
+    // Use autoTable plugin
+    if (typeof doc.autoTable === 'function') {
+        doc.autoTable({
+            startY: y,
+            head: headers,
+            body: data,
+            theme: 'striped',
+            headStyles: { fillColor: [220, 53, 69] }, 
+            styles: { fontSize: 8, cellPadding: 2 }
+        });
+        y = doc.autoTable.previous.finalY + 10;
+    } else {
+        doc.text("Items: (Table could not be generated)", 10, y);
+        y += 10;
+    }
+    
+    // --- Summary Totals ---
+    doc.setFontSize(12);
+    doc.text(`Subtotal: ${formatPrice(order.subtotal)}`, 150, y);
+    y += 6;
+    doc.text(`Shipping: ${order.shippingFee === 0 ? 'FREE' : formatPrice(order.shippingFee)}`, 150, y);
+    y += 8;
+    
+    doc.setFontSize(14);
+    doc.setTextColor(220, 53, 69); // Red for Total
+    doc.text(`Total Amount: ${formatPrice(order.totalAmount)}`, 150, y);
+    y += 15;
+    
+    // --- Footer ---
+    doc.setFontSize(10);
+    doc.setTextColor(150, 150, 150);
+    doc.text("Thank you for shopping with The IR7 Football Shop!", 105, y, null, null, 'center');
+
+    // Save the PDF and trigger download
+    doc.save(`Receipt_Order_${order.orderId}.pdf`);
+    
+    showToast('Receipt download started!', 'success');
+}
+// =========================================================================
+// III. CART DATA MANAGEMENT (CRUD)
+// =========================================================================
+
+/**
+ * Updates the quantity of a specific item (by ID and size) in the cart.
+ * Includes stock validation to prevent ordering more than available.
+ * @param {number} productId - The ID of the product.
+ * @param {string} size - The selected size of the product.
+ * @param {number} newQuantity - The quantity requested by the user.
+ */
+
 function updateQuantity(productId, size, newQuantity) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
     newQuantity = parseInt(newQuantity);
 
-    // Remove the specific item (by ID and size)
-    const updatedCart = cart.filter(item => !(item.id === productId && item.selectedSize === size));
-    
-    // Find the original item
-    const itemToReAdd = cart.find(item => item.id === productId && item.selectedSize === size);
-    
-    if (itemToReAdd && newQuantity > 0) {
-        // Add the item back with the new quantity
-        for (let i = 0; i < newQuantity; i++) {
-            updatedCart.push({ ...itemToReAdd });
-        }
+    // Find the product item in the cart
+    const productItem = cart.find(item => item.id === productId && item.selectedSize === size);
+    if (!productItem) {
+        showToast('Error: Product not found in cart.', 'error');
+        return;
+    }
+
+    // 1. Basic quantity check
+    if (newQuantity < 1 || isNaN(newQuantity)) {
+        newQuantity = 1;
+    }
+
+    // 2. Stock validation
+    if (newQuantity > productItem.stock) {
+        showToast(`Only ${productItem.stock} items available in stock. Quantity limited.`, 'warning');
+        newQuantity = productItem.stock;
     }
     
+    // Update the cart array with the new quantity
+    const updatedCart = cart.map(item => {
+        if (item.id === productId && item.selectedSize === size) {
+            item.quantity = newQuantity;
+        }
+        return item;
+    });
+
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+    renderCart(); // Re-render the cart immediately
     updateCartCount();
-    renderCartPage();
 }
 
+/**
+ * Removes a specific item (identified by ID and size) from the cart.
+ * @param {number} productId - The ID of the product.
+ * @param {string} size - The selected size of the product.
+ */
 function removeItem(productId, size) {
     let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // Filter out the specific item
     const updatedCart = cart.filter(item => !(item.id === productId && item.selectedSize === size));
-    
+
     localStorage.setItem('cart', JSON.stringify(updatedCart));
+    renderCart(); // Re-render the cart immediately
     updateCartCount();
-    renderCartPage();
-}
-
-function showCheckoutModal(totalAmount) {
-    const isLoggedIn = AuthSystem.isAuthenticated();
-    const currentUser = AuthSystem.getCurrentUser();
-    
-    const checkoutModal = document.createElement('div');
-    checkoutModal.className = 'modal fade';
-    checkoutModal.id = 'checkoutModal';
-    checkoutModal.innerHTML = `
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Checkout - Order Total: ${formatPrice(totalAmount)}</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    ${isLoggedIn ? `
-                        <div class="alert alert-info">
-                            <i class="fas fa-user me-2"></i>Welcome, ${currentUser.firstName}! 
-                            <a href="#" onclick="switchToGuest()" class="alert-link">Not you? Checkout as guest</a>
-                        </div>
-                    ` : `
-                        <div class="alert alert-warning">
-                            <i class="fas fa-exclamation-triangle me-2"></i>
-                            You're checking out as a guest. 
-                            <a href="auth.html" class="alert-link">Sign in for faster checkout</a>
-                        </div>
-                    `}
-                    
-                    <form id="checkoutForm">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">First Name *</label>
-                                <input type="text" class="form-control" name="firstName" 
-                                       value="${isLoggedIn ? currentUser.firstName : ''}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Last Name *</label>
-                                <input type="text" class="form-control" name="lastName" 
-                                       value="${isLoggedIn ? currentUser.lastName : ''}" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Email *</label>
-                                <input type="email" class="form-control" name="email" 
-                                       value="${isLoggedIn ? currentUser.email : ''}" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label">Phone Number *</label>
-                                <input type="tel" class="form-control" name="phone" 
-                                       value="${isLoggedIn ? currentUser.phone : ''}" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Delivery Address *</label>
-                            <textarea class="form-control" name="address" rows="3" required 
-                                      placeholder="Full address including area, city, and postal code"></textarea>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label">Payment Method *</label>
-                            <div class="payment-methods">
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" 
-                                           id="cod" value="COD" checked>
-                                    <label class="form-check-label" for="cod">
-                                        <i class="fas fa-money-bill-wave me-2"></i>Cash on Delivery (COD)
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" 
-                                           id="bkash" value="bKash">
-                                    <label class="form-check-label" for="bkash">
-                                        <i class="fas fa-mobile-alt me-2"></i>bKash
-                                    </label>
-                                </div>
-                                <div class="form-check mb-2">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" 
-                                           id="nagad" value="Nagad">
-                                    <label class="form-check-label" for="nagad">
-                                        <i class="fas fa-wallet me-2"></i>Nagad
-                                    </label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="paymentMethod" 
-                                           id="card" value="Credit Card">
-                                    <label class="form-check-label" for="card">
-                                        <i class="fas fa-credit-card me-2"></i>Credit/Debit Card
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3 form-check">
-                            <input type="checkbox" class="form-check-input" id="agreeTerms" required>
-                            <label class="form-check-label" for="agreeTerms">
-                                I agree to the <a href="#" data-bs-toggle="modal" data-bs-target="#termsModal">Terms and Conditions</a>
-                            </label>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                    <button type="button" class="btn btn-danger" onclick="submitOrder(${totalAmount})">
-                        <i class="fas fa-lock me-2"></i>Place Order
-                    </button>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    document.body.appendChild(checkoutModal);
-    
-    const modal = new bootstrap.Modal(checkoutModal);
-    modal.show();
-    
-    // Remove modal from DOM when hidden
-    checkoutModal.addEventListener('hidden.bs.modal', function () {
-        document.body.removeChild(checkoutModal);
-    });
+    showToast('Item removed from cart.', 'success');
 }
 
 
-// Global function for order submission
-window.submitOrder = async function(totalAmount) {
-    const form = document.getElementById('checkoutForm');
-    if (!form.checkValidity()) {
-        form.reportValidity();
-        return;
-    }
+// =========================================================================
+// IV. CART RENDERING
+// =========================================================================
 
-    const formData = new FormData(form);
-    const orderData = {
-        customer: {
-            firstName: formData.get('firstName'),
-            lastName: formData.get('lastName'),
-            email: formData.get('email'),
-            phone: formData.get('phone'),
-            address: formData.get('address')
-        },
-        paymentMethod: formData.get('paymentMethod'),
-        items: JSON.parse(localStorage.getItem('cart')) || [],
-        totalAmount: totalAmount,
-        orderDate: new Date().toISOString()
-    };
-
-    try {
-        const response = await fetch('/api/orders', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(orderData)
-        });
-
-        const result = await response.json();
-        
-        if (result.success) {
-            // Close modal
-            const modal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
-            modal.hide();
-            
-            // Clear cart and show success
-            localStorage.removeItem('cart');
-            updateCartCount();
-            showOrderSuccess(result.orderId, totalAmount);
-        } else {
-            throw new Error('Order failed');
-        }
-    } catch (error) {
-        showToast('Order failed. Please try again.', 'error');
-    }
-};
-
-window.switchToGuest = function() {
-    AuthSystem.signOut();
-    const modal = bootstrap.Modal.getInstance(document.getElementById('checkoutModal'));
-    modal.hide();
-    setTimeout(() => showCheckoutModal(total), 500);
-};
-
-function showOrderSuccess(orderId, totalAmount) {
-    const cartContentDiv = document.getElementById('cart-content');
-    const cartSummaryCol = document.getElementById('cart-summary-col');
-    
-    cartContentDiv.innerHTML = `
-        <div class="text-center p-5 bg-success bg-opacity-10 border border-success rounded-3 fade-in">
-            <i class="fas fa-check-circle fa-4x text-success mb-3"></i>
-            <h3 class="text-success fw-bold mb-3">Order Confirmed!</h3>
-            <p class="lead">Your order <strong>#${orderId}</strong> totaling <strong>${formatPrice(totalAmount)}</strong> has been confirmed.</p>
-            <div class="order-details mt-4 p-3 bg-white rounded">
-                <h5 class="mb-3">Order Details</h5>
-                <p><strong>Order ID:</strong> ${orderId}</p>
-                <p><strong>Total Amount:</strong> ${formatPrice(totalAmount)}</p>
-                <p><strong>Estimated Delivery:</strong> 3-5 business days</p>
-                <p class="text-muted small">You will receive a confirmation email shortly.</p>
-            </div>
-            <div class="d-flex gap-2 justify-content-center mt-4">
-                <a href="index.html" class="btn btn-primary btn-lg">
-                    <i class="fas fa-home me-2"></i>Continue Shopping
-                </a>
-                <button class="btn btn-outline-primary btn-lg" onclick="window.print()">
-                    <i class="fas fa-print me-2"></i>Print Receipt
-                </button>
-            </div>
-        </div>
-    `;
-    
-    if (cartSummaryCol) {
-        cartSummaryCol.style.display = 'none';
-    }
-
-    console.log(`Order placed: #${orderId} for ${formatPrice(totalAmount)}`);
-}
-
-export function renderCartPage() {
+/**
+ * Renders the cart items and the order summary on the cart.html page.
+ */
+function renderCart() {
     const cart = JSON.parse(localStorage.getItem('cart')) || [];
-    const cartContentDiv = document.getElementById('cart-content');
-    const cartSummaryCol = document.getElementById('cart-summary-col');
-    const cartSummaryDiv = document.getElementById('cart-summary');
-
-    if (!cartContentDiv || !cartSummaryDiv || !cartSummaryCol) {
-        return;
-    }
+    const container = document.getElementById('cart-items-container');
+    const summary = document.getElementById('cart-summary');
     
-    if (cartContentDiv.querySelector('.bg-success')) {
-        cartSummaryCol.style.display = 'none';
-        return;
+    if (!container || !summary) {
+        console.error("Cart container or summary element not found. Check cart.html IDs.");
+        return; 
     }
 
-    cartContentDiv.innerHTML = '';
-    cartSummaryDiv.innerHTML = '';
-    let subtotal = 0;
+    // --- Calculate Totals ---
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const freeShippingThreshold = 3000;
+    const standardShippingFee = 110;
+    const shippingFee = subtotal >= freeShippingThreshold ? 0 : standardShippingFee;
+    const totalAmount = subtotal + shippingFee;
 
+    // ----------------------------------------------------
+    // Render Cart Items
+    // ----------------------------------------------------
     if (cart.length === 0) {
-        cartContentDiv.innerHTML = `
-            <div class="text-center p-5">
-                <i class="fas fa-shopping-cart fa-4x text-muted mb-3"></i>
-                <h4 class="text-muted mb-3">Your cart is empty</h4>
-                <p class="text-muted mb-4">Discover our amazing football gear and fill your cart!</p>
-                <a href="index.html#shop" class="btn btn-primary btn-lg">
-                    <i class="fas fa-shopping-bag me-2"></i>Start Shopping
-                </a>
+        container.innerHTML = `
+            <div class="alert alert-info text-center py-5" role="alert">
+                <i class="fas fa-info-circle fa-3x mb-3 text-primary"></i>
+                <h4 class="alert-heading">Your cart is empty!</h4>
+                <p>Looks like you haven't added anything to your cart yet. Time to explore our premium football gear.</p>
             </div>
+            <p class="text-center mt-3"><a href="index.html#shop" class="btn btn-danger btn-lg"><i class="fas fa-store me-2"></i> Start Shopping</a></p>
         `;
-        cartSummaryCol.style.display = 'none';
-        return;
+    } else {
+        container.innerHTML = cart.map(item => `
+            <div class="card mb-3 shadow-sm border-light cart-item-card" data-product-id="${item.id}" data-size="${item.selectedSize}">
+                <div class="row g-0 align-items-center">
+                    <div class="col-md-3 col-4">
+                        <img src="${getImageUrl(item.image)}" class="img-fluid rounded-start p-2" alt="${item.name}" loading="lazy">
+                    </div>
+                    <div class="col-md-9 col-8">
+                        <div class="card-body py-2 px-3">
+                            <h5 class="card-title mb-1 text-truncate">${item.name}</h5>
+                            <p class="card-text mb-1 small text-muted">
+                                Size: <span class="badge bg-secondary me-2">${item.selectedSize}</span>
+                                Category: ${item.category}
+                            </p>
+                            <p class="card-text fw-bold mb-2 text-danger fs-5">
+                                ${formatPrice(item.price)} <small class="text-muted fw-normal">x ${item.quantity}</small> 
+                                = ${formatPrice(item.price * item.quantity)}
+                            </p>
+                            
+                            <div class="d-flex align-items-center mb-2">
+                                <label for="quantity-${item.id}-${item.selectedSize}" class="form-label me-2 small mb-0 fw-bold">Qty:</label>
+                                <input type="number" class="form-control form-control-sm quantity-input me-3" 
+                                       id="quantity-${item.id}-${item.selectedSize}"
+                                       data-product-id="${item.id}"
+                                       data-size="${item.selectedSize}"
+                                       value="${item.quantity}" min="1" max="${item.stock || 99}" style="width: 70px;">
+                                
+                                <button class="btn btn-sm btn-outline-danger remove-from-cart" 
+                                        data-product-id="${item.id}"
+                                        data-size="${item.selectedSize}"
+                                        title="Remove item">
+                                    <i class="fas fa-trash"></i> <span class="d-none d-sm-inline">Remove</span>
+                                </button>
+                            </div>
+                            <small class="text-success mt-1 d-block"><i class="fas fa-boxes me-1"></i>In Stock: ${item.stock}</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `).join('');
     }
-    
-    cartSummaryCol.style.display = 'block';
 
-    // Build cart items
-    let cartItemsHtml = '<div class="cart-items">';
-    
-    cart.forEach(item => {
-        const itemTotal = item.price * item.quantity;
-        subtotal += itemTotal;
-        
-        cartItemsHtml += `
-            <div class="cart-item fade-in" id="cart-item-${item.id}-${item.selectedSize}">
-                <img src="${getImageUrl(item.image)}" 
-                     alt="${item.name}" 
-                     class="cart-item-image"
-                     onerror="this.src='https://via.placeholder.com/100x100/dc3545/fff?text=IR7'">
-                
-                <div class="cart-item-details">
-                    <h5 class="mb-2">${item.name}</h5>
-                    <p class="cart-item-category mb-2">${item.category.toUpperCase()}</p>
-                    ${item.selectedSize ? `<p class="cart-item-size mb-1"><strong>Size:</strong> ${item.selectedSize}</p>` : ''}
-                    <p class="cart-item-price mb-0">${formatPrice(item.price)} each</p>
+    // ----------------------------------------------------
+    // Render Cart Summary
+    // ----------------------------------------------------
+    summary.innerHTML = `
+        <div class="card shadow-lg sticky-top" style="top: 85px;">
+            <div class="card-header bg-danger text-white text-uppercase fw-bold fs-5">
+                <i class="fas fa-receipt me-2"></i> Order Summary
+            </div>
+            <div class="card-body">
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Subtotal (${cart.length} items):</span>
+                    <span class="fw-bold">${formatPrice(subtotal)}</span>
                 </div>
-
-                <div class="cart-item-controls d-flex align-items-center gap-3">
-                    <div class="quantity-controls">
-                        <label class="form-label small mb-1">Qty:</label>
-                        <input type="number" 
-                               class="form-control quantity-input" 
-                               data-product-id="${item.id}"
-                               data-size="${item.selectedSize}"
-                               value="${item.quantity}" 
-                               min="1" 
-                               max="10">
-                    </div>
-                    
-                    <div class="text-center">
-                        <div class="fw-bold text-dark fs-5">${formatPrice(itemTotal)}</div>
-                    </div>
-                    
-                    <button class="btn remove-from-cart" 
-                            data-product-id="${item.id}"
-                            data-size="${item.selectedSize}"
-                            title="Remove item">
-                        <i class="fas fa-trash"></i>
-                    </button>
+                <div class="d-flex justify-content-between mb-2">
+                    <span class="text-muted">Shipping Fee:</span>
+                    <span class="fw-bold text-success">${shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}</span>
                 </div>
-            </div>
-        `;
-    });
-
-    cartItemsHtml += '</div>';
-    cartContentDiv.innerHTML = cartItemsHtml;
-
-    // Calculate totals
-    const shipping = subtotal > 3000 ? 0 : 110;
-    const taxRate = 0.05;
-    const tax = subtotal * taxRate;
-    const total = subtotal + shipping + tax;
-
-    // Cart summary
-    cartSummaryDiv.innerHTML = `
-        <div class="cart-summary">
-            <h4 class="text-center">
-                <i class="fas fa-receipt me-2"></i>Order Summary
-            </h4>
-            
-            <div class="summary-line">
-                <span>Subtotal (${cart.length} items):</span>
-                <span class="fw-semibold">${formatPrice(subtotal)}</span>
-            </div>
-            
-            <div class="summary-line">
-                <span>Shipping:</span>
-                <span class="fw-semibold">${shipping === 0 ? 'FREE' : formatPrice(shipping)}</span>
-            </div>
-            
-            <div class="summary-line">
-                <span>VAT (5%):</span>
-                <span class="fw-semibold">${formatPrice(tax)}</span>
-            </div>
-            
-            ${subtotal < 3000 ? `
-                <div class="alert alert-info small mt-3">
-                    <i class="fas fa-shipping-fast me-2"></i>
-                    Add ${formatPrice(3000 - subtotal)} more for free shipping!
+                ${shippingFee > 0 ? `<p class="small text-muted mb-3"><i class="fas fa-truck-loading me-1"></i> Enjoy **FREE** shipping on orders over **${formatPrice(freeShippingThreshold)}**</p>` : ''}
+                <hr>
+                <div class="d-flex justify-content-between mb-3 fs-4">
+                    <span class="fw-bold">Total Amount:</span>
+                    <span class="fw-bold text-danger">${formatPrice(totalAmount)}</span>
                 </div>
-            ` : `
-                <div class="alert alert-success small mt-3">
-                    <i class="fas fa-check-circle me-2"></i>
-                    You qualify for free shipping!
-                </div>
-            `}
-            
-            <div class="summary-line summary-total border-top pt-3 mt-2">
-                <span>Total:</span>
-                <span class="fs-4 text-danger">${formatPrice(total)}</span>
-            </div>
-            
-            <div class="d-grid gap-2 mt-4">
-                <button class="btn btn-danger btn-lg fw-bold rounded-pill py-3" id="checkout-button">
-                    <i class="fas fa-lock me-2"></i>Proceed to Checkout
-                </button>
-                <button class="btn btn-outline-secondary btn-lg rounded-pill py-3" onclick="window.location.href='index.html#shop'">
-                    <i class="fas fa-arrow-left me-2"></i>Continue Shopping
+                <button class="btn btn-success btn-lg w-100" id="checkout-button" ${cart.length === 0 ? 'disabled' : ''} data-bs-toggle="modal" data-bs-target="#checkoutModal">
+                    <i class="fas fa-arrow-right me-2"></i> Proceed to Checkout
                 </button>
             </div>
-            
-            <div class="text-center mt-3">
-                <small class="text-muted">
-                    <i class="fas fa-shield-alt me-1"></i>
-                    Secure payment • 30-day returns • Free shipping over ৳3,000
-                </small>
+            <div class="card-footer text-center bg-light">
+                <small class="text-muted"><i class="fas fa-shield-alt me-1"></i>Secure checkout by IR7</small>
+                <small class="text-muted d-block mt-1"><i class="fas fa-undo-alt me-1"></i>30-day return policy</small>
             </div>
         </div>
     `;
 
-    // Event listeners
-    document.querySelectorAll('.quantity-input').forEach(input => {
-        input.addEventListener('change', (e) => {
-            const productId = parseInt(e.target.dataset.productId);
-            const size = e.target.dataset.size;
-            let newQuantity = parseInt(e.target.value);
-            
-            if (newQuantity < 1 || isNaN(newQuantity)) {
-                newQuantity = 1;
-                e.target.value = 1;
-            } else if (newQuantity > 10) {
-                newQuantity = 10;
-                e.target.value = 10;
-            }
+    // --- Attach Event Listeners ---
+    attachCartEventListeners(totalAmount);
+}
 
-            updateQuantity(productId, size, newQuantity);
-        });
+/**
+ * Helper function to attach event listeners after cart rendering.
+ * @param {number} totalAmount - The calculated final total amount for the order.
+ */
+function attachCartEventListeners(totalAmount) {
+    // 1. Quantity change handler
+    document.querySelectorAll('.quantity-input').forEach(input => {
+        // Use remove/add pattern to prevent multiple listeners on re-render
+        input.removeEventListener('change', handleQuantityChange);
+        input.addEventListener('change', handleQuantityChange);
     });
 
+    // 2. Remove item handler
     document.querySelectorAll('.remove-from-cart').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const button = e.target.closest('button');
-            if (button) {
-                const productId = parseInt(button.dataset.productId);
-                const size = button.dataset.size;
-                if (confirm('Are you sure you want to remove this item from your cart?')) {
-                    removeItem(productId, size);
+        // Use remove/add pattern to prevent multiple listeners on re-render
+        button.removeEventListener('click', handleRemoveItem);
+        button.addEventListener('click', handleRemoveItem);
+    });
+
+    // 3. Checkout button handler (to initialize modal steps)
+    const checkoutButton = document.getElementById('checkout-button');
+    if (checkoutButton) {
+        // IMPORTANT: Use the modal's `show` event to run the initialization logic
+        const checkoutModal = document.getElementById('checkoutModal');
+        if (checkoutModal) {
+            
+            // Define a persistent handler function
+            const checkoutModalShowHandler = function() {
+                // Call the setup function when the modal is about to be shown
+                setupCheckoutSteps(totalAmount);
+            };
+            
+            // Remove previous handler to prevent duplicates
+            checkoutModal.removeEventListener('show.bs.modal', checkoutModalShowHandler);
+            
+            // Attach the handler
+            checkoutModal.addEventListener('show.bs.modal', checkoutModalShowHandler);
+        }
+    }
+}
+
+/**
+ * Event handler for quantity input change.
+ */
+function handleQuantityChange(e) {
+    const productId = parseInt(e.target.dataset.productId);
+    const size = e.target.dataset.size;
+    let newQuantity = parseInt(e.target.value);
+    
+    if (newQuantity < 1 || isNaN(newQuantity)) {
+        newQuantity = 1;
+        e.target.value = 1;
+    }
+
+    updateQuantity(productId, size, newQuantity);
+}
+
+/**
+ * Event handler for remove button click.
+ */
+function handleRemoveItem(e) {
+    const targetButton = e.target.closest('button');
+    if (targetButton) {
+        const productId = parseInt(targetButton.dataset.productId);
+        const size = targetButton.dataset.size;
+        if (confirm('Are you sure you want to remove this item from your cart?')) {
+            removeItem(productId, size);
+        }
+    }
+}
+
+
+// =========================================================================
+// V. CHECKOUT LOGIC (MULTI-STEP MODAL)
+// =========================================================================
+
+// Global variables to store checkout state
+let shippingData = {};
+let paymentMethod = 'COD'; // Default: Cash on Delivery
+let finalTotalAmount = 0;
+
+/**
+ * Manages the transition, validation, and data rendering between checkout steps.
+ * This is the main function called when the checkout button is clicked.
+ * @param {number} totalAmount - The calculated final total amount for the order.
+ */
+function setupCheckoutSteps(totalAmount) {
+    let currentStep = 1;
+    const steps = ['step-shipping', 'step-payment', 'step-review', 'step-confirmation'];
+    finalTotalAmount = totalAmount; // Store final amount globally
+
+    // Helper to show the correct step content
+    const showStep = (stepIndex) => {
+        currentStep = stepIndex;
+        steps.forEach((id, index) => {
+            const stepElement = document.getElementById(id);
+            if (stepElement) {
+                // Ensure all steps are hidden first, and only the current one is shown
+                stepElement.style.display = (index === stepIndex - 1) ? 'block' : 'none';
+                // Remove the special confirmation styling if going back from step 4
+                if (index !== 3) { 
+                    stepElement.classList.remove('flex-column', 'align-items-center', 'text-center');
+                }
+                
+                // Update modal title/progress
+                const modalTitle = document.getElementById('checkoutModalLabel');
+                if (modalTitle) {
+                    modalTitle.textContent = `Checkout - Step ${stepIndex}: ${
+                        stepIndex === 1 ? 'Shipping Details' : 
+                        stepIndex === 2 ? 'Payment Method' : 
+                        stepIndex === 3 ? 'Review & Place Order' : 'Order Confirmation'
+                    }`;
                 }
             }
         });
-    });
+    };
+    
+    // Reset validation state on modal initialization
+    document.getElementById('shipping-form')?.classList.remove('was-validated');
 
-    document.getElementById('checkout-button').addEventListener('click', () => {
-        showCheckoutModal(total);
-    });
+    // --- Step 1 (Shipping) Handlers ---
+    document.getElementById('btn-continue-payment').onclick = () => {
+        const form = document.getElementById('shipping-form');
+        const phoneInput = document.getElementById('shipping-phone');
+        const phone = phoneInput.value.trim();
+        
+        // Custom Phone Number Validation: 10-15 digits
+        const phoneRegex = /^\d{10,15}$/;
+        if (!phoneRegex.test(phone)) {
+            phoneInput.setCustomValidity('Phone number must be 10-15 digits.');
+        } else {
+            phoneInput.setCustomValidity(''); // Validation passes
+        }
+        
+        if (!form.checkValidity()) {
+            form.classList.add('was-validated');
+            showToast('Please fill out all required shipping fields correctly.', 'warning');
+            return;
+        }
+
+        // Capture and store validated shipping data
+        shippingData = {
+            firstName: document.getElementById('shipping-first-name').value.trim(),
+            lastName: document.getElementById('shipping-last-name').value.trim(),
+            phone: phone,
+            address: document.getElementById('shipping-address').value.trim(),
+        };
+        showStep(2);
+    };
+
+    // --- Step 2 (Payment) Handlers ---
+    document.getElementById('btn-back-shipping').onclick = () => showStep(1);
+    
+    document.getElementById('btn-continue-review').onclick = () => {
+        const selectedPayment = document.querySelector('input[name="paymentMethod"]:checked');
+        if (!selectedPayment) {
+            showToast('Please select a payment method.', 'warning');
+            return;
+        }
+        paymentMethod = selectedPayment.value;
+        
+        // Proceed to render the Review step and show it
+        renderReviewStep();
+        showStep(3);
+    };
+
+    // --- Step 3 (Review) Handlers ---
+    document.getElementById('btn-back-payment').onclick = () => showStep(2);
+
+    document.getElementById('btn-place-order').onclick = placeOrder;
+    
+    // Load existing user data to pre-fill shipping form on step 1
+    loadShippingDefaults();
+    
+    // Initialize to the first step
+    showStep(1);
 }
 
-// Initialize cart page
-document.addEventListener('DOMContentLoaded', () => {
-    if (window.location.pathname.endsWith('cart.html')) {
-        renderCartPage();
+/**
+ * Pre-fills the shipping form with data from the currently logged-in user, if available.
+ */
+function loadShippingDefaults() {
+    const currentUser = AuthSystem.getCurrentUser();
+    if (currentUser) {
+        document.getElementById('shipping-first-name').value = currentUser.firstName || '';
+        document.getElementById('shipping-last-name').value = currentUser.lastName || '';
+        document.getElementById('shipping-phone').value = currentUser.phone || '';
     }
-});
+}
+
+/**
+ * Renders the shipping info and final order summary in the review step (Step 3).
+ */
+function renderReviewStep() {
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    
+    // 1. Render Shipping/Payment Info
+    const shippingInfoHtml = `
+        <h5 class="mb-3 text-primary"><i class="fas fa-truck me-2"></i> Shipping To:</h5>
+        <p class="mb-1 fw-bold">${shippingData.firstName} ${shippingData.lastName}</p>
+        <p class="mb-1"><i class="fas fa-map-marker-alt me-2 text-muted"></i> ${shippingData.address}</p>
+        <p class="mb-3"><i class="fas fa-phone me-2 text-muted"></i> ${shippingData.phone}</p>
+        
+        <h5 class="mb-3 text-primary"><i class="fas fa-dollar-sign me-2"></i> Payment Method:</h5>
+        <p class="mb-0 text-success fw-bold">${paymentMethod === 'COD' ? 'Cash on Delivery (COD)' : 'Online Payment (Simulated)'}</p>
+    `;
+    document.getElementById('review-shipping-info').innerHTML = shippingInfoHtml;
+
+    // 2. Render Cart Items
+    const itemsHtml = cart.map(item => `
+        <li class="list-group-item d-flex justify-content-between align-items-center py-2">
+            <span class="text-truncate" style="max-width: 70%;">
+                ${item.name} 
+                <small class="text-muted">(${item.selectedSize}) x ${item.quantity}</small>
+            </span>
+            <span class="fw-bold text-end">${formatPrice(item.price * item.quantity)}</span>
+        </li>
+    `).join('');
+    document.getElementById('review-cart-items').innerHTML = itemsHtml;
+    
+    // 3. Render Final Order Summary
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shippingFee = finalTotalAmount - subtotal;
+
+    document.getElementById('review-order-summary').innerHTML = `
+        <li class="list-group-item d-flex justify-content-between text-muted">
+            <span>Subtotal:</span>
+            <span>${formatPrice(subtotal)}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between text-muted">
+            <span>Shipping:</span>
+            <span class="text-success">${shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}</span>
+        </li>
+        <li class="list-group-item d-flex justify-content-between fs-5 bg-light fw-bold text-danger">
+            <span class="fw-bold">Total Payable:</span>
+            <span>${formatPrice(finalTotalAmount)}</span>
+        </li>
+    `;
+}
+
+/**
+ * Handles order submission to the server (via mock API), updates local storage, and shows confirmation.
+ */
+async function placeOrder() {
+    const placeOrderButton = document.getElementById('btn-place-order');
+    const originalButtonHtml = placeOrderButton.innerHTML;
+    placeOrderButton.disabled = true;
+    placeOrderButton.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span> Placing Order...';
+
+    const cart = JSON.parse(localStorage.getItem('cart')) || [];
+    const currentUser = AuthSystem.getCurrentUser();
+    
+    const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
+    const shippingFee = finalTotalAmount - subtotal;
+
+    const orderData = {
+        orderId: `IR7-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Unique ID
+        orderDate: new Date().toISOString(),
+        customer: currentUser ? { 
+            id: currentUser.id, 
+            firstName: currentUser.firstName, 
+            lastName: currentUser.lastName, 
+            email: currentUser.email 
+        } : { 
+            id: 'guest-' + Date.now(),
+            firstName: shippingData.firstName, 
+            lastName: shippingData.lastName, 
+            email: 'guest-' + Date.now() + '@ir7.com' // Placeholder for guests
+        },
+        shippingAddress: shippingData.address,
+        shippingPhone: shippingData.phone,
+        items: cart.map(item => ({
+            id: item.id,
+            name: item.name,
+            size: item.selectedSize,
+            quantity: item.quantity,
+            price: item.price,
+            category: item.category
+        })),
+        paymentMethod: paymentMethod,
+        subtotal: subtotal,
+        shippingFee: shippingFee,
+        totalAmount: finalTotalAmount,
+        status: 'pending' // Initial status
+    };
+
+    try {
+        // --- API CALL (Mocked to rely on your /api/orders endpoint in server.js) ---
+        const response = await fetch('/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(orderData)
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Failed to process order on server.');
+        }
+
+        const finalOrder = await response.json();
+
+        // --- SUCCESS ACTIONS ---
+        localStorage.removeItem('cart');
+        updateCartCount();
+
+        // Render confirmation step
+        renderConfirmation(finalOrder); // This handles the UI transition
+        
+        showToast('🎉 Order Placed Successfully! Reloading cart content.', 'success');
+
+    } catch (error) {
+        console.error('Order Submission Error:', error);
+        showToast(`Order failed: ${error.message}. Please check your server or connection.`, 'error');
+        // Restore button state
+        placeOrderButton.disabled = false;
+        placeOrderButton.innerHTML = originalButtonHtml;
+    }
+}
+
+/**
+ * Renders the final confirmation step in the modal (Step 4).
+ * This function also handles the UI transition to step 4.
+ * @param {object} order - The final order object returned from the server.
+ */
+/**
+ * Renders the final confirmation step in the modal (Step 4).
+ * This function also handles the UI transition to step 4.
+ * @param {object} order - The final order object returned from the server.
+ */
+/**
+ * Renders the final confirmation step in the modal (Step 4).
+ * This function also handles the UI transition to step 4.
+ * @param {object} order - The final order object returned from the server.
+ */
+/**
+ * Renders the final confirmation step in the modal (Step 4).
+ * This function also handles the UI transition to step 4.
+ * @param {object} order - The final order object returned from the server.
+ */
+/**
+ * Renders the final confirmation step in the modal (Step 4).
+ * @param {object} order - The final order object returned from the server.
+ */
+function renderConfirmation(order) {
+    const confirmationStep = document.getElementById('step-confirmation');
+    
+    // ... (rest of the setup code remains the same) ...
+
+    // CRITICAL DATA RETRIEVAL FIX: Safely retrieve and structure customer/shipping data
+    const customer = order.customer || {};
+    // Handle both object and string format for shippingAddress
+    const shipping = (typeof order.shippingAddress === 'object' && order.shippingAddress !== null) 
+                     ? order.shippingAddress 
+                     : {};
+    
+    // Safely construct the name (prioritizing full name)
+    const customerName = (customer.firstName && customer.lastName) ? 
+                         `${customer.firstName} ${customer.lastName}` : 
+                         customer.firstName || customer.lastName || (customer.email ? customer.email.split('@')[0] : 'Valued Customer');
+                         
+    // Safely get the phone number (prioritize nested field, then top-level field)
+    const shippingPhone = shipping.phone || order.shippingPhone || 'N/A';
+    
+    // Safely get the email
+    const customerEmail = customer.email || 'N/A';
+    
+    // Safely construct the full shipping address string for display
+    let fullShippingAddress;
+    if (typeof order.shippingAddress === 'string') {
+        // If it was saved as a single string (buggy server behavior)
+        fullShippingAddress = order.shippingAddress;
+    } else {
+        // If it's a structured object
+        fullShippingAddress = [
+            shipping.address1, 
+            shipping.address2, 
+            shipping.city, 
+            shipping.postcode, 
+            shipping.country
+        ].filter(Boolean).join(', ') || 'No Address Provided';
+    }
+
+
+    confirmationStep.innerHTML = `
+        <div class="p-4 border rounded shadow-sm w-100" style="max-width: 500px;">
+            <h2 class="text-success mb-3"><i class="fas fa-check-circle fa-3x mb-2"></i></h2>
+            <h3 class="mb-3">Order Confirmed, ${customerName}!</h3>
+            <p class="lead">Your order **#${order.orderId}** has been successfully placed.</p>
+            <p class="mb-4 text-muted small">We've sent a confirmation to **${customerEmail}** at phone number **${shippingPhone}**.</p>
+            
+            <ul class="list-group list-group-flush mb-4 text-start">
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Order ID:</span>
+                    <span class="text-primary">${order.orderId}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Total Payable:</span>
+                    <span class="fw-bold text-danger">${formatPrice(order.totalAmount)}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between flex-column align-items-start">
+                    <span class="fw-bold">Shipping To:</span>
+                    <span class="small text-muted">${fullShippingAddress}</span>
+                </li>
+                <li class="list-group-item d-flex justify-content-between">
+                    <span class="fw-bold">Payment Method:</span>
+                    <span>${order.paymentMethod === 'COD' ? 'Cash on Delivery' : 'Online Payment (Simulated)'}</span>
+                </li>
+            </ul>
+
+            <button class="btn btn-danger btn-lg mt-3" data-bs-dismiss="modal" onclick="window.location.href='index.html';">
+                <i class="fas fa-home me-2"></i> Continue Shopping
+            </button>
+            <button class="btn btn-outline-primary mt-3 ms-2" id="btn-download-pdf" data-order-id="${order.orderId}">
+                <i class="fas fa-file-download me-2"></i> Download Receipt
+            </button>
+        </div>
+    `;
+    
+    // Handle PDF download
+    const downloadButton = document.getElementById('btn-download-pdf');
+    if (downloadButton) {
+        // Attach the actual PDF generation handler
+        downloadButton.addEventListener('click', () => generatePDFReceipt(order));
+    }
+    
+    renderCart();
+}
+// =========================================================================
+// VI. INITIALIZATION
+// =========================================================================
+
+/**
+ * Ensures cart rendering runs only once and only on the cart page.
+ */
+function initializeCartPage() {
+    // Check if the current page is cart.html
+    if (window.location.pathname.endsWith('cart.html')) {
+        renderCart();
+    }
+}
+
+// Initialize cart page rendering when the DOM is fully loaded
+document.addEventListener('DOMContentLoaded', initializeCartPage);
+
+// Export key functions for use in other modules
+export { renderCart, updateQuantity, removeItem, formatPrice, getImageUrl };

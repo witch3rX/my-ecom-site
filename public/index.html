@@ -10,6 +10,11 @@
     <meta name="author" content="IR7 Football Shop">
     <meta name="keywords" content="football, soccer, jerseys, boots, balls, sports gear, Bangladesh">
     <meta name="description" content="The IR7 Football Shop - Your premium destination for affordable football jerseys, boots, balls and accessories in Bangladesh">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="The IR7 Football Shop - Premium Football Gear">
+    <meta property="og:description" content="Your premium destination for affordable football gear in Bangladesh">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://ir7shop.com">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@9/swiper-bundle.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
@@ -19,6 +24,43 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    
+    <style>
+        .search-box {
+            position: relative;
+        }
+        .search-box .form-control {
+            padding-right: 40px;
+        }
+        .search-box .fa-search {
+            pointer-events: none;
+            z-index: 10;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+        }
+        #product-count {
+            font-weight: 500;
+            color: #6c757d;
+        }
+        .trust-badges {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 0;
+        }
+        .review-card {
+            border: 1px solid #e9ecef;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            background: white;
+        }
+        .stars {
+            color: #ffc107;
+        }
+    </style>
 </head>
 <body>
     <div id="main-wrapper" class="overflow-hidden">
@@ -73,6 +115,7 @@
             </nav>
         </header>
 
+        <!-- Enhanced Hero Section -->
         <section id="hero" class="text-white position-relative" style="margin-top: 76px; height: calc(100vh - 76px);">
             <div class="container-fluid h-100">
                 <div class="row h-100 align-items-center">
@@ -95,12 +138,42 @@
             </div>
         </section>
 
+        <!-- Trust & Professionalism Section -->
+        <section class="trust-badges">
+            <div class="container">
+                <div class="row text-center">
+                    <div class="col-md-3 mb-4">
+                        <i class="fas fa-shield-alt fa-3x mb-3"></i>
+                        <h5>Secure Checkout</h5>
+                        <p class="mb-0">100% Safe & Secure Payments</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <i class="fas fa-truck fa-3x mb-3"></i>
+                        <h5>Fast Delivery</h5>
+                        <p class="mb-0">Across Bangladesh</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <i class="fas fa-undo-alt fa-3x mb-3"></i>
+                        <h5>Easy Returns</h5>
+                        <p class="mb-0">30-Day Return Policy</p>
+                    </div>
+                    <div class="col-md-3 mb-4">
+                        <i class="fas fa-headset fa-3x mb-3"></i>
+                        <h5>24/7 Support</h5>
+                        <p class="mb-0">Customer Care</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <section id="shop" class="py-5 my-5">
             <div class="container">
                 <div class="row mb-4">
                     <div class="col-md-12 text-center">
                         <h2 class="text-center mb-4">Our Products</h2>
                         <p class="lead text-muted mb-4">All prices in Bangladeshi Taka (BDT)</p>
+                        
+                        <!-- Restored Category Filters -->
                         <div class="category-filters my-4 d-flex justify-content-center flex-wrap">
                             <a href="#all" class="btn btn-outline-dark category-filter active" data-category="all">All</a>
                             <a href="#jerseys" class="btn btn-outline-dark category-filter" data-category="jerseys">Jerseys</a>
@@ -108,34 +181,173 @@
                             <a href="#balls" class="btn btn-outline-dark category-filter" data-category="balls">Balls</a>
                             <a href="#accessories" class="btn btn-outline-dark category-filter" data-category="accessories">Accessories</a>
                         </div>
+
+                        <!-- Enhanced Filter and Sort Controls with Search -->
+                        <div class="d-flex flex-wrap justify-content-center gap-3 mb-4 align-items-center">
+                            <!-- Search Box -->
+                            <div class="search-box">
+                                <input type="text" 
+                                       class="form-control" 
+                                       id="search-input" 
+                                       placeholder="Search products..."
+                                       style="width: 250px;">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            
+                            <select class="form-select" id="sort-options" style="width: auto;">
+                                <option value="newest">Newest First</option>
+                                <option value="price-low">Price: Low to High</option>
+                                <option value="price-high">Price: High to Low</option>
+                                <option value="name">Name: A to Z</option>
+                            </select>
+                            <button class="btn btn-outline-primary" data-bs-toggle="offcanvas" data-bs-target="#filterOffcanvas">
+                                <i class="fas fa-filter me-2"></i>More Filters
+                            </button>
+                        </div>
+
+                        <!-- Product Count -->
+                        <div class="mb-3">
+                            <p id="product-count" class="text-muted">Loading products...</p>
+                        </div>
                     </div>
                 </div>
+
+                <!-- Filter Offcanvas -->
+                <div class="offcanvas offcanvas-start" tabindex="-1" id="filterOffcanvas">
+                    <div class="offcanvas-header">
+                        <h5 class="offcanvas-title">Advanced Filters</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+                    </div>
+                    <div class="offcanvas-body">
+                        <!-- Price Filter -->
+                        <div class="mb-4">
+                            <h6>Price Range</h6>
+                            <input type="range" class="form-range" id="price-range" min="0" max="10000" step="500" value="10000">
+                            <div class="d-flex justify-content-between">
+                                <small>৳0</small>
+                                <small id="price-range-value">৳10000</small>
+                            </div>
+                        </div>
+
+                        <!-- Size Filter -->
+                        <div class="mb-4">
+                            <h6>Size</h6>
+                            <div class="form-check">
+                                <input class="form-check-input size-filter" type="checkbox" value="S" id="size-s">
+                                <label class="form-check-label" for="size-s">Small (S)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-filter" type="checkbox" value="M" id="size-m">
+                                <label class="form-check-label" for="size-m">Medium (M)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-filter" type="checkbox" value="L" id="size-l">
+                                <label class="form-check-label" for="size-l">Large (L)</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input size-filter" type="checkbox" value="XL" id="size-xl">
+                                <label class="form-check-label" for="size-xl">Extra Large (XL)</label>
+                            </div>
+                        </div>
+
+                        <!-- Brand Filter -->
+                        <div class="mb-4">
+                            <h6>Brand</h6>
+                            <div class="form-check">
+                                <input class="form-check-input brand-filter" type="checkbox" value="Nike" id="brand-nike">
+                                <label class="form-check-label" for="brand-nike">Nike</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input brand-filter" type="checkbox" value="Adidas" id="brand-adidas">
+                                <label class="form-check-label" for="brand-adidas">Adidas</label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input brand-filter" type="checkbox" value="Puma" id="brand-puma">
+                                <label class="form-check-label" for="brand-puma">Puma</label>
+                            </div>
+                        </div>
+
+                        <button class="btn btn-outline-danger w-100" id="reset-filters">
+                            <i class="fas fa-times me-2"></i>Reset All Filters
+                        </button>
+                    </div>
+                </div>
+
                 <div id="app-container"></div>
             </div>
         </section>
 
-        <section id="features" class="py-5 bg-light">
+        <!-- Customer Reviews Section -->
+        <section class="py-5 bg-light">
             <div class="container">
-                <div class="row text-center">
+                <div class="row">
+                    <div class="col-12 text-center mb-5">
+                        <h2>What Our Customers Say</h2>
+                        <p class="lead">Trusted by football enthusiasts across Bangladesh</p>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-4 mb-4">
-                        <div class="feature-item p-4">
-                            <i class="fas fa-shipping-fast fa-3x text-primary mb-3"></i>
-                            <h4>Free Shipping</h4>
-                            <p class="text-muted">Free delivery on orders over ৳3,000. Standard shipping ৳110.</p>
+                        <div class="review-card">
+                            <div class="stars mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h5>Excellent Quality!</h5>
+                            <p class="text-muted">"The jerseys are authentic and the delivery was super fast. Highly recommended!"</p>
+                            <div class="d-flex align-items-center">
+                                <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?w=50&h=50&fit=crop&crop=face" 
+                                     alt="Customer" class="rounded-circle me-3" width="40" height="40" loading="lazy">
+                                <div>
+                                    <strong>Rahim Ahmed</strong>
+                                    <div class="text-muted small">Dhaka</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <div class="feature-item p-4">
-                            <i class="fas fa-undo-alt fa-3x text-primary mb-3"></i>
-                            <h4>Easy Returns</h4>
-                            <p class="text-muted">30-day return policy. No questions asked.</p>
+                        <div class="review-card">
+                            <div class="stars mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star-half-alt"></i>
+                            </div>
+                            <h5>Great Boots</h5>
+                            <p class="text-muted">"The football boots are comfortable and durable. Perfect for both turf and grass."</p>
+                            <div class="d-flex align-items-center">
+                                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=50&h=50&fit=crop&crop=face" 
+                                     alt="Customer" class="rounded-circle me-3" width="40" height="40" loading="lazy">
+                                <div>
+                                    <strong>Karim Khan</strong>
+                                    <div class="text-muted small">Chittagong</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-4 mb-4">
-                        <div class="feature-item p-4">
-                            <i class="fas fa-shield-alt fa-3x text-primary mb-3"></i>
-                            <h4>Secure Payment</h4>
-                            <p class="text-muted">Your payment information is safe with us.</p>
+                        <div class="review-card">
+                            <div class="stars mb-2">
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <h5>Amazing Service</h5>
+                            <p class="text-muted">"Customer support was very helpful. Easy return process and quick refund."</p>
+                            <div class="d-flex align-items-center">
+                                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=50&h=50&fit=crop&crop=face" 
+                                     alt="Customer" class="rounded-circle me-3" width="40" height="40" loading="lazy">
+                                <div>
+                                    <strong>Fatima Begum</strong>
+                                    <div class="text-muted small">Sylhet</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -147,34 +359,37 @@
                 <div class="row">
                     <div class="col-md-4">
                         <h5>The IR7 Football Shop</h5>
-                        <p>Affordable premium football gear in Bangladesh.</p>
+                        <p>Your premium destination for affordable football gear. Store: Will be opened soon.</p>
                         <div class="social-links">
-                            <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                            <a href="https://www.facebook.com/iram.ridwan.9/" class="text-white me-3" target="_blank"><i class="fab fa-facebook-f"></i></a>
+                            <a href="https://www.instagram.com/iramridwan_ir7/" class="text-white me-3" target="_blank"><i class="fab fa-instagram"></i></a>
+                            <a href="https://x.com/iram_ridwan" class="text-white me-3" target="_blank"><i class="fab fa-twitter"></i></a>
+                            <a href="https://www.youtube.com/@iramridwan7" class="text-white" target="_blank"><i class="fab fa-youtube"></i></a>
                         </div>
                     </div>
                     <div class="col-md-4">
                         <h5>Quick Links</h5>
                         <ul class="list-unstyled">
                             <li><a href="index.html" class="text-white-50">Home</a></li>
+                            <li><a href="about.html" class="text-white-50">About Us</a></li>
+                            <li><a href="contact.html" class="text-white-50">Contact</a></li>
+                            <li><a href="return-policy.html" class="text-white-50">Return Policy</a></li>
                             <li><a href="#shop" class="text-white-50">Shop</a></li>
-                            <li><a href="auth.html" class="text-white-50">Sign In</a></li>
-                            <li><a href="cart.html" class="text-white-50">Cart</a></li>
                         </ul>
                     </div>
                     <div class="col-md-4">
-                        <h5>Contact Us</h5>
-                        <p class="text-white-50"><i class="fas fa-envelope me-2"></i>info@ir7shop.com</p>
-                        <p class="text-white-50"><i class="fas fa-phone me-2"></i>+880 1234 567890</p>
-                        <p class="text-white-50"><i class="fas fa-map-marker-alt me-2"></i>Dhaka, Bangladesh</p>
+                        <h5>Contact Info</h5>
+                        <p class="text-white-50 mb-1"><i class="fas fa-user me-2"></i>Founder & CEO - Iram Ridwan</p>
+                        <p class="text-white-50 mb-1"><i class="fas fa-envelope me-2"></i>iramridwan@gmail.com</p>
+                        <p class="text-white-50 mb-1"><i class="fas fa-envelope me-2"></i>iram@inument.com</p>
+                        <p class="text-white-50 mb-1"><i class="fas fa-phone me-2"></i>01629377934</p>
+                        <p class="text-white-50"><i class="fas fa-store me-2"></i>Store: Will be opened soon.</p>
                     </div>
                 </div>
                 <div class="row mt-4">
                     <div class="col-12 text-center">
                         <p class="text-white-50 small mb-2">All prices are in Bangladeshi Taka (BDT) • Shipping: ৳110 (Free over ৳3,000)</p>
-                        <p class="text-white-50 small">© 2024 The IR7 Football Shop. All rights reserved.</p>
+                        <p class="text-white-50 small">© 2025 IRAM RIDWAN. All rights reserved.</p>
                     </div>
                 </div>
             </div>

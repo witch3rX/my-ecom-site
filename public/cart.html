@@ -17,37 +17,38 @@
             padding-top: 50px;
             padding-bottom: 50px;
         }
+        /* Style for the checkout steps */
+        .checkout-step {
+            min-height: 400px; /* Ensure content stability */
+            padding: 15px;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
     </style>
 </head>
 <body class="cart-page">
-    <!-- Updated Header -->
     <header class="site-header position-fixed w-100 top-0">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">
-                    <i class="fas fa-futbol me-2" style="color: #dc3545;"></i>IR7
-                </a>
-                <div class="collapse navbar-collapse justify-content-end">
-                    <ul class="navbar-nav align-items-center">
+                <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">IR7 <small class="text-danger">Football</small></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav ms-auto">
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html">
-                                <i class="fas fa-home me-1"></i>Home
-                            </a>
+                            <a class="nav-link active" aria-current="page" href="index.html">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="index.html#shop">
-                                <i class="fas fa-shirt me-1"></i>Shop
-                            </a>
+                            <a class="nav-link" href="index.html#shop">Shop</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="auth.html">
-                                <i class="fas fa-user me-1"></i>Sign In
-                            </a>
+                            <a class="nav-link" href="auth.html" id="auth-link">Sign In / Register</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link active position-relative" href="cart.html">
-                                <i class="fas fa-shopping-cart me-1"></i>Cart 
-                                <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                            <a class="nav-link" href="cart.html">
+                                <i class="fas fa-shopping-cart"></i> Cart
+                                <span class="badge rounded-pill bg-danger" id="cart-count" style="display: none;">0</span>
                             </a>
                         </li>
                     </ul>
@@ -56,30 +57,22 @@
         </nav>
     </header>
 
-    <!-- Main Cart Content -->
     <section class="cart-section">
-        <div class="container mt-5 pt-4">
-            <h1 class="text-center fw-bold mb-5">Your Shopping Cart</h1>
-            
+        <div class="container">
+            <h1 class="text-center mb-5">Your Shopping Cart</h1>
             <div class="row">
-                <!-- Cart Items Column (Large: 8, Medium: 7) -->
                 <div class="col-lg-8 col-md-7 mb-4">
-                    <div class="card p-3 shadow-sm border-0">
-                         <!-- Cart items will be rendered here by cart.js -->
-                        <div id="cart-content" class="p-2">
-                            <p class="text-center text-muted">Loading cart items...</p>
-                        </div>
-                        <div class="p-2 border-top mt-3">
-                            <a href="index.html#shop" class="btn btn-outline-secondary">
-                                <i class="fas fa-arrow-left me-2"></i> Continue Shopping
-                            </a>
-                        </div>
+                    <div id="cart-items-container">
+                        <p class="text-center text-muted">Your cart is empty.</p>
+                    </div>
+                    <div class="d-flex justify-content-between mt-4">
+                        <a href="index.html#shop" class="btn btn-outline-secondary">
+                            <i class="fas fa-arrow-left me-2"></i> Continue Shopping
+                        </a>
                     </div>
                 </div>
                 
-                <!-- Cart Summary Column (Large: 4, Medium: 5) -->
                 <div class="col-lg-4 col-md-5" id="cart-summary-col">
-                    <!-- Cart summary will be rendered here by cart.js -->
                     <div id="cart-summary">
                         <p class="text-center text-muted">Loading summary...</p>
                     </div>
@@ -88,6 +81,101 @@
         </div>
     </section>
 
+    <div class="modal fade" id="checkoutModal" tabindex="-1" aria-labelledby="checkoutModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="checkoutModalLabel">Secure Checkout</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="checkout-steps-container">
+                        
+                        <div id="step-shipping" class="checkout-step" style="display: none;">
+                            <h5 class="mb-3"><i class="fas fa-truck text-primary me-2"></i> 1. Shipping Information</h5>
+                            <form id="shipping-form" novalidate>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="shipping-first-name" class="form-label">First Name *</label>
+                                        <input type="text" class="form-control" id="shipping-first-name" required>
+                                        <div class="invalid-feedback">First name is required.</div>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="shipping-last-name" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="shipping-last-name">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="shipping-phone" class="form-label">Phone *</label>
+                                    <input type="tel" class="form-control" id="shipping-phone" required placeholder="e.g., 01XXXXXXXXX">
+                                    <div class="invalid-feedback">Valid phone number is required.</div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="shipping-address" class="form-label">Full Address *</label>
+                                    <textarea class="form-control" id="shipping-address" rows="3" required placeholder="Street address, city, postcode"></textarea>
+                                    <div class="invalid-feedback">Full address is required.</div>
+                                </div>
+                                <div class="d-flex justify-content-end">
+                                    <button type="button" class="btn btn-primary" id="btn-continue-payment">Continue to Payment <i class="fas fa-arrow-right ms-2"></i></button>
+                                </div>
+                            </form>
+                        </div>
+
+                        <div id="step-payment" class="checkout-step" style="display: none;">
+                            <h5 class="mb-4"><i class="fas fa-credit-card text-success me-2"></i> 2. Payment Method</h5>
+                            <div class="form-check mb-3 p-3 border rounded shadow-sm">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="payment-cod" value="COD" checked>
+                                <label class="form-check-label fw-bold" for="payment-cod">
+                                    Cash on Delivery (COD) 🇧🇩
+                                </label>
+                                <div class="text-muted small ms-4">Pay upon receiving your order. Recommended for first-time buyers.</div>
+                            </div>
+                            <div class="form-check mb-5 p-3 border rounded shadow-sm">
+                                <input class="form-check-input" type="radio" name="paymentMethod" id="payment-card" value="Card" disabled>
+                                <label class="form-check-label text-muted" for="payment-card">
+                                    Card/Mobile Banking (Coming Soon)
+                                </label>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between">
+                                <button type="button" class="btn btn-secondary" id="btn-back-shipping"><i class="fas fa-arrow-left me-2"></i> Back to Shipping</button>
+                                <button type="button" class="btn btn-primary" id="btn-continue-review">Continue to Review <i class="fas fa-arrow-right ms-2"></i></button>
+                            </div>
+                        </div>
+
+                        <div id="step-review" class="checkout-step" style="display: none;">
+                            <h5 class="mb-3"><i class="fas fa-receipt text-warning me-2"></i> 3. Review Your Order</h5>
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-header bg-light fw-bold">Delivery To</div>
+                                <div class="card-body small" id="review-shipping-info"></div>
+                            </div>
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-header bg-light fw-bold">Items in Cart</div>
+                                <ul class="list-group list-group-flush small" id="review-cart-items"></ul>
+                            </div>
+                            <div class="card mb-3 shadow-sm">
+                                <div class="card-header bg-light fw-bold">Order Summary</div>
+                                <div class="card-body small" id="review-order-summary"></div>
+                            </div>
+                            
+                            <div class="d-flex justify-content-between mt-4">
+                                <button type="button" class="btn btn-secondary" id="btn-back-payment"><i class="fas fa-arrow-left me-2"></i> Back to Payment</button>
+                                <button type="button" class="btn btn-success" id="btn-place-order">
+                                    <i class="fas fa-lock me-2"></i> Place Order
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="step-confirmation" class="checkout-step text-center d-flex flex-column justify-content-center align-items-center" style="display: none;">
+                            </div>
+
+                    </div>
+                    </div>
+            </div>
+        </div>
+    </div>
+
+
     <footer id="footer-top" class="bg-dark text-white py-4">
         <div class="container text-center">
             <p class="mb-0 small">© 2024 The IR7 Football Shop. All prices in BDT. Shipping: ৳110 (Free over ৳3,000)</p>
@@ -95,12 +183,14 @@
     </footer>
     
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
-    <!-- Use components/cart.js to handle the cart logic and rendering -->
     <script type="module" src="components/cart.js"></script>
-    <!-- Use app.js to update the global cart count in the header -->
     <script type="module">
         import { updateCartCount } from './app.js';
-        document.addEventListener('DOMContentLoaded', updateCartCount);
+        updateCartCount();
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> 
+    <script type="module" src="components/cart.js"></script>
+    
 </body>
 </html>

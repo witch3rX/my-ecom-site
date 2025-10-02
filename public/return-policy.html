@@ -1,0 +1,306 @@
+[file name]: return-policy.html
+[file content begin]
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Return & Refund Policy - The IR7 Football Shop</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .policy-hero {
+            background: linear-gradient(135deg, rgba(40, 167, 69, 0.9), rgba(33, 37, 41, 0.9));
+            color: white;
+            padding: 100px 0 50px;
+            margin-top: 76px;
+        }
+        .policy-card {
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+        }
+        .policy-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #dc3545;
+        }
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 20px;
+        }
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -30px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="site-header position-fixed w-100 top-0">
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <div class="container-fluid">
+                <a class="navbar-brand text-uppercase fw-bold fs-3" href="index.html">
+                    <i class="fas fa-futbol me-2" style="color: #dc3545;"></i>IR7
+                </a>
+                <div class="collapse navbar-collapse justify-content-end">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html">
+                                <i class="fas fa-home me-1"></i>Home
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.html#shop">
+                                <i class="fas fa-shirt me-1"></i>Shop
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="about.html">
+                                <i class="fas fa-info-circle me-1"></i>About
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="contact.html">
+                                <i class="fas fa-envelope me-1"></i>Contact
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="auth.html">
+                                <i class="fas fa-user me-1"></i>Sign In
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="cart.html">
+                                <i class="fas fa-shopping-cart me-1"></i>Cart 
+                                <span id="cart-count" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle" style="display: none;">0</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="policy-hero">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-8 mx-auto text-center">
+                    <h1 class="display-4 fw-bold mb-4">Return & Refund Policy</h1>
+                    <p class="lead mb-4">Hassle-free returns and quick refunds for your peace of mind</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policy Overview -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row mb-5">
+                <div class="col-md-4 mb-4">
+                    <div class="policy-card text-center p-4 h-100">
+                        <i class="fas fa-undo-alt policy-icon text-primary"></i>
+                        <h5>30-Day Returns</h5>
+                        <p class="text-muted">Return any unused item within 30 days of purchase for a full refund or exchange.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="policy-card text-center p-4 h-100">
+                        <i class="fas fa-truck policy-icon text-primary"></i>
+                        <h5>Free Returns</h5>
+                        <p class="text-muted">Free return shipping for defective or incorrect items.</p>
+                    </div>
+                </div>
+                <div class="col-md-4 mb-4">
+                    <div class="policy-card text-center p-4 h-100">
+                        <i class="fas fa-money-bill-wave policy-icon text-primary"></i>
+                        <h5>Quick Refunds</h5>
+                        <p class="text-muted">Refunds processed within 3-5 business days after we receive your return.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <!-- Return Process -->
+                    <div class="mb-5">
+                        <h3 class="mb-4">Return Process</h3>
+                        <div class="timeline">
+                            <div class="timeline-item">
+                                <h5>1. Request Return</h5>
+                                <p class="text-muted">Contact our customer service within 30 days of receiving your order to initiate a return.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>2. Package Items</h5>
+                                <p class="text-muted">Pack the item in its original packaging with all tags and labels attached.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>3. Ship Back</h5>
+                                <p class="text-muted">Use the provided return label or ship to our return address.</p>
+                            </div>
+                            <div class="timeline-item">
+                                <h5>4. Receive Refund</h5>
+                                <p class="text-muted">Once we receive and inspect the item, we'll process your refund within 3-5 business days.</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Eligibility -->
+                    <div class="mb-5">
+                        <h3 class="mb-4">Return Eligibility</h3>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex">
+                                    <i class="fas fa-check text-success me-3 mt-1"></i>
+                                    <div>
+                                        <h6>Items That Can Be Returned</h6>
+                                        <p class="text-muted small">Unused items with original tags and packaging within 30 days</p>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <div class="d-flex">
+                                    <i class="fas fa-times text-danger me-3 mt-1"></i>
+                                    <div>
+                                        <h6>Non-Returnable Items</h6>
+                                        <p class="text-muted small">Used or damaged items, personalized/custom products</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Refund Details -->
+                    <div class="mb-5">
+                        <h3 class="mb-4">Refund Details</h3>
+                        <div class="table-responsive">
+                            <table class="table table-bordered">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>Refund Type</th>
+                                        <th>Processing Time</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Credit Card</td>
+                                        <td>3-5 business days</td>
+                                        <td>Appears on next billing statement</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Bank Transfer</td>
+                                        <td>5-7 business days</td>
+                                        <td>Depending on your bank</td>
+                                    </tr>
+                                    <tr>
+                                        <td>bKash/Nagad</td>
+                                        <td>24-48 hours</td>
+                                        <td>Instant processing available</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Exchange Policy -->
+                    <div class="mb-5">
+                        <h3 class="mb-4">Exchange Policy</h3>
+                        <p>We offer free exchanges for:</p>
+                        <ul>
+                            <li>Wrong size received</li>
+                            <li>Defective products</li>
+                            <li>Wrong item shipped</li>
+                        </ul>
+                        <p class="text-muted">Exchanges are processed within 24 hours of receiving the returned item.</p>
+                    </div>
+
+                    <!-- Contact Support -->
+                    <div class="alert alert-info">
+                        <h5><i class="fas fa-headset me-2"></i>Need Help?</h5>
+                        <p class="mb-2">Our customer service team is here to help with any return or exchange questions.</p>
+                        <a href="contact.html" class="btn btn-primary btn-sm">Contact Support</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4">
+                    <h5 class="mb-3">The IR7 Football Shop</h5>
+                    <p>Your premium destination for affordable football gear in Bangladesh</p>
+                    <div class="social-links">
+                        <a href="#" class="text-white me-3"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-instagram"></i></a>
+                        <a href="#" class="text-white me-3"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="col-md-2 mb-4">
+                    <h5 class="mb-3">Quick Links</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="index.html" class="text-white-50">Home</a></li>
+                        <li class="mb-2"><a href="index.html#shop" class="text-white-50">Shop</a></li>
+                        <li class="mb-2"><a href="about.html" class="text-white-50">About Us</a></li>
+                        <li class="mb-2"><a href="contact.html" class="text-white-50">Contact</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Customer Service</h5>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="return-policy.html" class="text-white-50">Return Policy</a></li>
+                        <li class="mb-2"><a href="shipping.html" class="text-white-50">Shipping Info</a></li>
+                        <li class="mb-2"><a href="faq.html" class="text-white-50">FAQ</a></li>
+                        <li class="mb-2"><a href="size-guide.html" class="text-white-50">Size Guide</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-3 mb-4">
+                    <h5 class="mb-3">Contact Info</h5>
+                    <p class="text-white-50 mb-2"><i class="fas fa-map-marker-alt me-2"></i>123 Football Street, Dhaka</p>
+                    <p class="text-white-50 mb-2"><i class="fas fa-phone me-2"></i>+880 1234 567890</p>
+                    <p class="text-white-50 mb-2"><i class="fas fa-envelope me-2"></i>info@ir7shop.com</p>
+                    <p class="text-white-50"><i class="fas fa-clock me-2"></i>Mon-Sat: 9AM-6PM</p>
+                </div>
+            </div>
+            <div class="row mt-4">
+                <div class="col-12 text-center">
+                    <p class="text-white-50 small mb-0">© 2024 The IR7 Football Shop. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module">
+        import { updateCartCount } from './app.js';
+        document.addEventListener('DOMContentLoaded', updateCartCount);
+    </script>
+</body>
+</html>
+[file content end]

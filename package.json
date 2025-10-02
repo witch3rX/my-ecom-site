@@ -8,10 +8,18 @@
     "start": "node server.js",
     "dev": "node server.js"
   },
-  "keywords": ["ecommerce", "football", "sports", "shop"],
-  "author": "CLEATS Team",
+  "keywords": [
+    "ecommerce",
+    "football",
+    "sports",
+    "shop"
+  ],
+  "author": "IRAM RIDWAN",
   "license": "ISC",
   "dependencies": {
-    "express": "^5.1.0"
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "helmet": "^8.1.0",
+    "nodemailer": "^6.10.1"
   }
 }

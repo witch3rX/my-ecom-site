@@ -1,0 +1,318 @@
+[
+  {
+    "id": 1,
+    "name": "Manchester United Home Jersey 2025-26",
+    "description": "Official home jersey for the current season.",
+    "price": 1299,
+    "category": "jerseys",
+    "details": "Available in S, M, L, XL, XXL. 100% Polyester. Authentic patch included.",
+    "image": "/images/products/manu.jpg",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "hasSizes": true,
+    "stock": 15,
+    "rating": 4.8,
+    "reviews": 23
+  },
+  {
+    "id": 2,
+    "name": "Real Madrid Home Jersey 2025-26",
+    "description": "Limited edition home jersey featuring sleek design.",
+    "price": 1299,
+    "category": "jerseys",
+    "details": "Customizable with name and number. Climacool ventilation.",
+    "image": "/images/products/rm.jpg",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "hasSizes": true,
+    "stock": 1,
+    "rating": 4.9,
+    "reviews": 18
+  },
+  {
+    "id": 3,
+    "name": "Barcelona Home Jersey 2025-26",
+    "description": "Special edition home jersey with unique design.",
+    "price": 1299,
+    "category": "jerseys",
+    "details": "Regular fit. Premium edition. Official licensed product.",
+    "image": "/images/products/barca.jpg",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "hasSizes": true,
+    "stock": 15,
+    "rating": 4.7,
+    "reviews": 15
+  },
+  {
+    "id": 4,
+    "name": "Brazil National Jersey",
+    "description": "Official Brazil national team jersey.",
+    "price": 1299,
+    "category": "jerseys",
+    "details": "Messi edition. Lightweight fabric. Moisture wicking.",
+    "image": "/images/products/bra.jpg",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL",
+      "XXL"
+    ],
+    "hasSizes": true,
+    "stock": 12,
+    "rating": 4.6,
+    "reviews": 31
+  },
+  {
+    "id": 5,
+    "name": "Nike Phantom GX Elite Boots",
+    "description": "Premium football boots with innovative grip technology.",
+    "price": 4999,
+    "category": "boots",
+    "details": "Textured finish for better ball control. Dynamic Fit collar.",
+    "image": "/images/products/gx.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "hasSizes": true,
+    "stock": 6,
+    "rating": 4.9,
+    "reviews": 42
+  },
+  {
+    "id": 6,
+    "name": "Adidas Predator Elite Boots",
+    "description": "Professional grade boots with enhanced grip and control.",
+    "price": 4999,
+    "category": "boots",
+    "details": "Hybridtouch upper for perfect fit. Controlskin technology.",
+    "image": "/images/products/add.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "hasSizes": true,
+    "stock": 0,
+    "rating": 4.8,
+    "reviews": 38
+  },
+  {
+    "id": 7,
+    "name": "Puma Future Ultimate Boots",
+    "description": "Advanced boots with adaptive fit technology.",
+    "price": 4999,
+    "category": "boots",
+    "details": "FUZIONFIT+ compression band. Dynamic Motion System outsole.",
+    "image": "/images/products/puma.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10"
+    ],
+    "hasSizes": true,
+    "stock": 7,
+    "rating": 4.7,
+    "reviews": 29
+  },
+  {
+    "id": 8,
+    "name": "Adidas Champions League Ball",
+    "description": "Official Champions League match ball.",
+    "price": 1999,
+    "category": "balls",
+    "details": "Butylene bladder for best air retention. All-weather use. Size 5.",
+    "image": "/images/products/addball.jpg",
+    "sizes": [
+      "Standard Size 5"
+    ],
+    "hasSizes": false,
+    "stock": 20,
+    "rating": 4.8,
+    "reviews": 56
+  },
+  {
+    "id": 9,
+    "name": "Nike Premier League Flight Ball",
+    "description": "Official Premier League match ball.",
+    "price": 1999,
+    "category": "balls",
+    "details": "Aerow Trac grooves for accurate flight. All conditions ball.",
+    "image": "/images/products/nikeball.jpg",
+    "sizes": [
+      "Standard Size 5"
+    ],
+    "hasSizes": false,
+    "stock": 18,
+    "rating": 4.9,
+    "reviews": 47
+  },
+  {
+    "id": 10,
+    "name": "Puma Official Match Ball",
+    "description": "FIFA approved professional match ball.",
+    "price": 1999,
+    "category": "balls",
+    "details": "Low-absorption exterior. 32-panel design for reduced drag.",
+    "image": "/images/products/pumaball.jpg",
+    "sizes": [
+      "Standard Size 5"
+    ],
+    "hasSizes": false,
+    "stock": 0,
+    "rating": 4.7,
+    "reviews": 33
+  },
+  {
+    "id": 11,
+    "name": "Football Shin Guards",
+    "description": "Professional shin guards with ankle protection.",
+    "price": 599,
+    "category": "accessories",
+    "details": "Lightweight polymer shell. Comfortable foam backing.",
+    "image": "/images/products/shin.jpg",
+    "sizes": [
+      "One Size"
+    ],
+    "hasSizes": false,
+    "stock": 25,
+    "rating": 4.5,
+    "reviews": 22
+  },
+  {
+    "id": 12,
+    "name": "Goalkeeper Gloves",
+    "description": "Professional goalkeeper gloves with latex palm.",
+    "price": 1499,
+    "category": "accessories",
+    "details": "Negative cut. Finger protection spines. All-weather grip.",
+    "image": "/images/products/gk.jpg",
+    "sizes": [
+      "S",
+      "M",
+      "L",
+      "XL"
+    ],
+    "hasSizes": true,
+    "stock": 14,
+    "rating": 4.6,
+    "reviews": 19
+  },
+  {
+    "id": 13,
+    "name": "Football Socks",
+    "description": "Professional football socks with cushioning.",
+    "price": 499,
+    "category": "accessories",
+    "details": "Moisture-wicking. Cushioned sole. Ankle support.",
+    "image": "/images/products/socks.jpg",
+    "sizes": [
+      "One Size Fits All"
+    ],
+    "hasSizes": false,
+    "stock": 50,
+    "rating": 4.4,
+    "reviews": 28
+  },
+  {
+    "id": 14,
+    "name": "Training Cones (Set of 10)",
+    "description": "Bright orange training cones for practice.",
+    "price": 799,
+    "category": "accessories",
+    "details": "Durable plastic. Stackable design. Bright color for visibility.",
+    "image": "/images/products/cone.jpg",
+    "sizes": [
+      "Standard Set"
+    ],
+    "hasSizes": false,
+    "stock": 29,
+    "rating": 4.3,
+    "reviews": 17
+  },
+  {
+    "id": 15,
+    "name": "Nike Tiempo White & Blue",
+    "category": "turf",
+    "description": "Nike",
+    "price": 4999,
+    "image": "/images/products/turf1.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "stock": 9,
+    "rating": 4,
+    "reviews": 10,
+    "hasSizes": true
+  },
+  {
+    "name": "Adidas Predator 20.3 Turf Soccer Shoe",
+    "description": "Adidas",
+    "price": 4999,
+    "category": "turf",
+    "stock": 10,
+    "image": "/images/products/turf2.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "rating": 4,
+    "reviews": 11,
+    "id": 16,
+    "hasSizes": true
+  },
+  {
+    "name": "PUMA x CHRISTIAN PULISIC ULTRA PLAY Turf Trainer Kids' Soccer Cleats",
+    "description": "PUMA x CHRISTIAN PULISIC",
+    "price": 4999,
+    "category": "turf",
+    "stock": 10,
+    "image": "/images/products/turf3.jpg",
+    "sizes": [
+      "6",
+      "7",
+      "8",
+      "9",
+      "10",
+      "11"
+    ],
+    "rating": 4,
+    "reviews": 15,
+    "id": 17,
+    "hasSizes": true
+  }
+]
