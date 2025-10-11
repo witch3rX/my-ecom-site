@@ -44,10 +44,6 @@ function getImageUrl(productImage) {
  * Generates a simple PDF receipt using jsPDF and triggers a download.
  * @param {object} order - The final order object.
  */
-/**
- * Generates a simple PDF receipt using jsPDF and triggers a download.
- * @param {object} order - The final order object.
- */
 function generatePDFReceipt(order) {
     // Check if the jsPDF library is loaded (Make sure you added the script tag in cart.html!)
     if (typeof window.jspdf === 'undefined' || typeof window.jspdf.jsPDF === 'undefined') {
@@ -60,24 +56,24 @@ function generatePDFReceipt(order) {
     const doc = new jsPDF();
     
     // --- Data Safety and Formatting ---
-    // Ensure nested objects exist, or default to an empty object {}
     const customer = order.customer || {};
-    const shipping = (typeof order.shippingAddress === 'object' && order.shippingAddress !== null) 
-                     ? order.shippingAddress 
-                     : {}; // <<< THIS IS CRITICAL
-
+    const shipping = order.shippingAddress || {}; // Use the nested address object
+    
+    // Extract data with robust fallbacks for PDF display
     const customerName = (customer.firstName && customer.lastName) ? 
                          `${customer.firstName} ${customer.lastName}` : 
                          customer.firstName || customer.lastName || 'Valued Customer';
                          
     const phone = shipping.phone || order.shippingPhone || 'N/A';
     const email = customer.email || 'N/A';
+    const totalAmount = order.totalAmount || 0;
+    const subtotal = order.subtotal || 0;
+    const shippingFee = order.shippingFee || 0;
     
-    // Safely construct the address lines for the PDF
-    const addressLine1 = shipping.address1 || 'N/A';
-    const addressLine2 = shipping.address2 ? `, ${shipping.address2}` : '';
-    const cityPostcode = `${shipping.city || ''}, ${shipping.postcode || ''}`.trim().replace(/,(\s*,){1,}/g, ',').replace(/^,|,$/g, '') || 'N/A';
-    const country = shipping.country || 'N/A';
+    // Safely construct the address lines for the PDF (assuming simple string address from form)
+    const addressLine1 = shipping.address || 'No Address Provided';
+    const cityPostcode = 'N/A'; // Since the form only collects one address line, these are unknown
+    const country = 'Bangladesh';
     
     // Set initial text position
     let y = 15;
@@ -115,7 +111,7 @@ function generatePDFReceipt(order) {
     doc.setFontSize(10);
     
     // Print the structured address lines
-    doc.text(`Address: ${addressLine1 + addressLine2}`, 10, y);
+    doc.text(`Address: ${addressLine1}`, 10, y);
     y += 6;
     doc.text(`City/Postcode: ${cityPostcode}`, 10, y);
     y += 6;
@@ -152,14 +148,14 @@ function generatePDFReceipt(order) {
     
     // --- Summary Totals ---
     doc.setFontSize(12);
-    doc.text(`Subtotal: ${formatPrice(order.subtotal)}`, 150, y);
+    doc.text(`Subtotal: ${formatPrice(subtotal)}`, 150, y);
     y += 6;
-    doc.text(`Shipping: ${order.shippingFee === 0 ? 'FREE' : formatPrice(order.shippingFee)}`, 150, y);
+    doc.text(`Shipping: ${shippingFee === 0 ? 'FREE' : formatPrice(shippingFee)}`, 150, y);
     y += 8;
     
     doc.setFontSize(14);
     doc.setTextColor(220, 53, 69); // Red for Total
-    doc.text(`Total Amount: ${formatPrice(order.totalAmount)}`, 150, y);
+    doc.text(`Total Amount: ${formatPrice(totalAmount)}`, 150, y);
     y += 15;
     
     // --- Footer ---
@@ -418,9 +414,8 @@ function handleRemoveItem(e) {
     if (targetButton) {
         const productId = parseInt(targetButton.dataset.productId);
         const size = targetButton.dataset.size;
-        if (confirm('Are you sure you want to remove this item from your cart?')) {
-            removeItem(productId, size);
-        }
+        // FIX: Removed confirm() to prevent blocking
+        removeItem(productId, size);
     }
 }
 
@@ -499,6 +494,11 @@ function setupCheckoutSteps(totalAmount) {
             lastName: document.getElementById('shipping-last-name').value.trim(),
             phone: phone,
             address: document.getElementById('shipping-address').value.trim(),
+            // Assuming simplified address structure for now
+            address1: document.getElementById('shipping-address').value.trim(),
+            city: 'Dhaka', // Placeholder
+            postcode: '1000', // Placeholder
+            country: 'Bangladesh' // Placeholder
         };
         showStep(2);
     };
@@ -540,6 +540,7 @@ function loadShippingDefaults() {
         document.getElementById('shipping-first-name').value = currentUser.firstName || '';
         document.getElementById('shipping-last-name').value = currentUser.lastName || '';
         document.getElementById('shipping-phone').value = currentUser.phone || '';
+        // Note: Address is not stored in currentUser object (must be fetched from profile API)
     }
 }
 
@@ -608,8 +609,16 @@ async function placeOrder() {
     const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
     const shippingFee = finalTotalAmount - subtotal;
 
+    // --- CRITICAL FIX: Ensure the shipping address is a structured object on submit ---
+    const shippingAddressObject = {
+        address1: shippingData.address,
+        phone: shippingData.phone,
+        city: shippingData.city,
+        postcode: shippingData.postcode,
+        country: shippingData.country,
+    };
+
     const orderData = {
-        orderId: `IR7-${Date.now()}-${Math.floor(Math.random() * 1000)}`, // Unique ID
         orderDate: new Date().toISOString(),
         customer: currentUser ? { 
             id: currentUser.id, 
@@ -622,8 +631,8 @@ async function placeOrder() {
             lastName: shippingData.lastName, 
             email: 'guest-' + Date.now() + '@ir7.com' // Placeholder for guests
         },
-        shippingAddress: shippingData.address,
-        shippingPhone: shippingData.phone,
+        shippingAddress: shippingAddressObject, // Sending structured object
+        shippingPhone: shippingData.phone, // Sending phone number separately for easy access
         items: cart.map(item => ({
             id: item.id,
             name: item.name,
@@ -677,29 +686,28 @@ async function placeOrder() {
  * This function also handles the UI transition to step 4.
  * @param {object} order - The final order object returned from the server.
  */
-/**
- * Renders the final confirmation step in the modal (Step 4).
- * This function also handles the UI transition to step 4.
- * @param {object} order - The final order object returned from the server.
- */
-/**
- * Renders the final confirmation step in the modal (Step 4).
- * This function also handles the UI transition to step 4.
- * @param {object} order - The final order object returned from the server.
- */
-/**
- * Renders the final confirmation step in the modal (Step 4).
- * This function also handles the UI transition to step 4.
- * @param {object} order - The final order object returned from the server.
- */
-/**
- * Renders the final confirmation step in the modal (Step 4).
- * @param {object} order - The final order object returned from the server.
- */
 function renderConfirmation(order) {
     const confirmationStep = document.getElementById('step-confirmation');
     
-    // ... (rest of the setup code remains the same) ...
+    if (!confirmationStep) {
+        console.error("Confirmation step container not found.");
+        return;
+    }
+
+    // 1. Crucial step: Hide all other checkout steps explicitly to fix the blank screen issue.
+    document.querySelectorAll('.checkout-step').forEach(step => {
+        step.style.display = 'none';
+    });
+    
+    // 2. Set the confirmation step to be visible and correctly styled.
+    confirmationStep.style.display = 'flex'; 
+    confirmationStep.classList.add('flex-column', 'align-items-center', 'text-center');
+
+    // Update modal title
+    const modalTitle = document.getElementById('checkoutModalLabel');
+    if (modalTitle) {
+        modalTitle.textContent = 'Checkout - Order Confirmation';
+    }
 
     // CRITICAL DATA RETRIEVAL FIX: Safely retrieve and structure customer/shipping data
     const customer = order.customer || {};
@@ -720,20 +728,13 @@ function renderConfirmation(order) {
     const customerEmail = customer.email || 'N/A';
     
     // Safely construct the full shipping address string for display
-    let fullShippingAddress;
-    if (typeof order.shippingAddress === 'string') {
-        // If it was saved as a single string (buggy server behavior)
-        fullShippingAddress = order.shippingAddress;
-    } else {
-        // If it's a structured object
-        fullShippingAddress = [
-            shipping.address1, 
-            shipping.address2, 
-            shipping.city, 
-            shipping.postcode, 
-            shipping.country
-        ].filter(Boolean).join(', ') || 'No Address Provided';
-    }
+    const fullShippingAddress = [
+        shipping.address1, 
+        shipping.address, // Fallback for previous simple string saving
+        shipping.city, 
+        shipping.postcode, 
+        shipping.country
+    ].filter(Boolean).join(', ') || 'No Address Provided';
 
 
     confirmationStep.innerHTML = `
